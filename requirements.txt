@@ -1,0 +1,14 @@
+# AI News Agent - Core Dependencies
+pyyaml>=6.0
+pydantic>=2.0
+jsonschema>=4.20
+python-dotenv>=1.0
+Pillow>=10.0
+numpy>=1.24
+requests>=2.31
+
+# Edge TTS (male narration)
+edge-tts>=0.0.0
+
+# Browser capture
+playwright>=1.40.0

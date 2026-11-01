@@ -1,0 +1,22 @@
+{
+  "$id": "https://ai-news-agent/schemas/publish_log.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Publish Log",
+  "description": "Stage 7 (publish) output: YouTube upload package.",
+  "type": "object",
+  "required": ["titles", "tags"],
+  "properties": {
+    "slug": {"type": "string"},
+    "titles": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "description": {"type": "string"},
+    "tags": {
+      "type": "object",
+      "properties": {
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "hashtags": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "thumbnail": {"type": "string"},
+    "ok": {"type": "boolean"}
+  }
+}

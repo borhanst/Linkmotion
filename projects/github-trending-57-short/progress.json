@@ -1,0 +1,15 @@
+{
+  "slug": "github-trending-57-short",
+  "pipeline": "ai-news-short",
+  "format": "short",
+  "topic": "GitHub Trending Today #57 roundup",
+  "source_type": "url",
+  "source_ref": "https://www.youtube.com/watch?v=PeJqgL1NW0c",
+  "stage": "compose",
+  "total_scenes": 7,
+  "current_scene": 0,
+  "voice": "",
+  "palette": {},
+  "notes": "",
+  "updated_at": "2026-11-01T13:44:06Z"
+}

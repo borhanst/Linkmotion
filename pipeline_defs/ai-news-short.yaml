@@ -1,0 +1,184 @@
+name: ai-news-short
+version: "1.0"
+description: >
+  45-75s vertical Short (9:16) about a single AI news story. One idea, one
+  primary source, fast pattern interrupt, loop-friendly ending.
+category: generated
+stability: production
+
+default_checkpoint_policy: guided
+
+extensions:
+  custom_scripts: true
+  custom_playbooks: true
+  custom_skills: true
+  custom_tools: false
+
+required_skills:
+  - pipelines/ai-news-short/executive-producer
+  - pipelines/ai-news-short/research-director
+  - pipelines/ai-news-short/proposal-director
+  - pipelines/ai-news-short/script-director
+  - pipelines/ai-news-short/storyboard-director
+  - pipelines/ai-news-short/asset-director
+  - pipelines/ai-news-short/compose-director
+  - pipelines/ai-news-short/publish-director
+  - meta/reviewer
+  - meta/checkpoint-protocol
+  - meta/onboarding
+
+orchestration:
+  mode: executive-producer
+  skill: pipelines/ai-news-short/executive-producer
+  budget_default_usd: 0.00
+  max_revisions_per_stage: 3
+  max_send_backs: 3
+  max_wall_time_minutes: 15
+
+compatible_playbooks:
+  recommended:
+    - flat-motion-graphics
+  also_works:
+    - clean-professional
+  custom_allowed: true
+
+stages:
+  - name: research
+    skill: pipelines/ai-news-short/research-director
+    produces:
+      - research_brief
+    tools_available:
+      - web_search
+      - youtube_source
+      - broll
+    checkpoint_required: false
+    human_approval_default: false
+    review_focus:
+      - Primary source identified and fetched (lab blog / model card / article)
+      - Publication date recorded
+      - 2-3 corroborating sources found
+      - Core claim verified against a page we actually show
+    success_criteria:
+      - research_brief has at least 2 cited data_points with URLs
+      - primary_source is set
+
+  - name: proposal
+    skill: pipelines/ai-news-short/proposal-director
+    required_artifacts_in:
+      - research_brief
+    produces:
+      - proposal_packet
+      - decision_log
+    tools_available: []
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Single sharpest angle chosen (not a topic survey)
+      - Concept grounded in a specific research finding
+      - Duration inside 45-75s
+    success_criteria:
+      - "proposal_packet has >= 1 concept_option"
+      - selected_concept references a valid concept_id
+      - approval.status is "approved" or "approved_with_changes"
+
+  - name: script
+    skill: pipelines/ai-news-short/script-director
+    required_artifacts_in:
+      - proposal_packet
+    produces:
+      - script
+    tools_available: []
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Hook in first 2 seconds
+      - 3-6 beats, each 3-8s
+      - Word count matches 45-75s at ~140-150 wpm
+      - Every sentence has something on screen
+    success_criteria:
+      - script has 3-6 beats
+      - total_duration_sec inside 45-75
+
+  - name: storyboard
+    skill: pipelines/ai-news-short/storyboard-director
+    required_artifacts_in:
+      - script
+    produces:
+      - storyboard
+    tools_available:
+      - browser_capture
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - "card -> web -> media/social -> card structure"
+      - No more than two web scenes in a row
+      - Every anchor copied verbatim from the inspected page
+      - 9:16 safe zones respected
+    success_criteria:
+      - "storyboard is schema-valid"
+      - ">= 3 scene types used"
+      - "loop-friendly last beat"
+
+  - name: assets
+    skill: pipelines/ai-news-short/asset-director
+    required_artifacts_in:
+      - storyboard
+    produces:
+      - asset_manifest
+    required_tools:
+      - tts
+    optional_tools:
+      - browser_capture
+    tools_available:
+      - tts
+      - browser_capture
+      - broll
+    checkpoint_required: true
+    human_approval_default: false
+    review_focus:
+      - All asset files exist on disk
+      - Narration covers every beat
+      - Word-level timestamps generated
+    success_criteria:
+      - asset_manifest is schema-valid
+      - every beat has an audio file
+
+  - name: compose
+    skill: pipelines/ai-news-short/compose-director
+    required_artifacts_in:
+      - storyboard
+      - asset_manifest
+    produces:
+      - render_report
+    required_tools:
+      - video_compose
+    tools_available:
+      - video_compose
+    checkpoint_required: true
+    human_approval_default: false
+    review_focus:
+      - Output exists and plays
+      - Duration inside 45-75s
+      - Captions word-synced to edge-tts timestamps
+      - Safe-zone check for 9:16
+    success_criteria:
+      - render_report has valid output path
+      - ffprobe duration inside 45-75s
+
+  - name: publish
+    skill: pipelines/ai-news-short/publish-director
+    required_artifacts_in:
+      - render_report
+    produces:
+      - publish_log
+    tools_available:
+      - metadata
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Title punchy, front-loaded keyword
+      - #Shorts in hashtags
+      - Description brief
+    success_criteria:
+      - publish_log is schema-valid
+      - metadata package present

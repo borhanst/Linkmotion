@@ -1,0 +1,39 @@
+name: minimalist-diagram
+category: whiteboard
+mood: focused, technical
+best_for: [technical-deep-dives, architecture]
+
+typography:
+  display_face: "Inter"
+  ui_face: "Inter"
+  display_weight: 600
+  ui_weight: 400
+  track_kicker: "0.2em"
+  tabular_numerals: true
+
+palette:
+  background: "#FFFFFF"
+  surface: "#F5F6F8"
+  primary_text: "#0A0A0F"
+  secondary_text: "#5A5F6E"
+  primary: "#1F6FEB"
+  secondary: "#6BB6FF"
+  accent: "#FFB020"
+  bg_gradient: ["#FFFFFF", "#F5F6F8"]
+
+motion:
+  default_easing: "expo.out"
+  spring_config: {damping: 12, mass: 0.6, stiffness: 120}
+  camera_push: "1 -> 1.03 across the scene"
+  parallax: {background: "0.2% scale/s", foreground: "0.8%"}
+
+audio:
+  narration_primary: true
+  music_bed: "minimal, low"
+  sfx: ["click", "pop"]
+
+quality:
+  grain: "2% procedural"
+  vignette: false
+  color_grade: "clean, high-key"
+  soft_offset_shadows: false

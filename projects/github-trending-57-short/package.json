@@ -1,0 +1,1 @@
+{"name":"github-trending-57-short","version":"1.0.0","scripts":{"build":"remotion render src/Root.tsx Main out/video.mp4"},"dependencies":{"react":"^18","react-dom":"^18","remotion":"^4"}}

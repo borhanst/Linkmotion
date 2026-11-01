@@ -1,0 +1,29 @@
+{
+  "$id": "https://ai-news-agent/schemas/script.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Script",
+  "description": "Stage 3 (script) output: narration beats with durations, purposes, and visual cues.",
+  "type": "object",
+  "required": ["beats", "total_duration_sec"],
+  "properties": {
+    "beats": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["beat", "title", "narration", "est_duration_sec"],
+        "properties": {
+          "beat": {"type": "integer", "minimum": 1},
+          "title": {"type": "string"},
+          "narration": {"type": "string"},
+          "est_duration_sec": {"type": "number", "exclusiveMinimum": 0},
+          "actual_duration_sec": {"type": "number", "minimum": 0},
+          "purpose": {"type": "string"},
+          "visual_elements": {"type": "array", "items": {"type": "string"}},
+          "engagement_overlay": {"type": ["object", "null"]}
+        }
+      }
+    },
+    "total_duration_sec": {"type": "number", "exclusiveMinimum": 0}
+  }
+}

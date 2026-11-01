@@ -1,0 +1,33 @@
+{
+  "$schema": "https://kilo.ai/schemas/kilo.json",
+  "version": "1.0",
+  "name": "ai-news-agent",
+  "description": "OpenMontage-style agentic pipeline for AI news / LLM model-release videos",
+  "commands": [
+    {
+      "name": "ai-news",
+      "path": ".kilo/commands/ai-news.md",
+      "description": "Produce an AI news / model-release video through the pipeline"
+    }
+  ],
+  "agents": [
+    {
+      "name": "pipeline-director",
+      "path": ".kilo/agent/pipeline-director.md",
+      "description": "Drives the pipeline: picks manifest, runs preflight, executes stage by stage"
+    }
+  ],
+  "skills": [
+    "skills"
+  ],
+  "mcp": {},
+  "permissions": {
+    "bash": "allow",
+    "edit": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "read": "allow",
+    "write": "allow",
+    "question": "ask"
+  }
+}

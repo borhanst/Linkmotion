@@ -1,0 +1,29 @@
+{
+  "$id": "https://ai-news-agent/schemas/asset_manifest.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Asset Manifest",
+  "description": "Stage 5 (assets) output: every asset with source, path, license note, and which beats use it.",
+  "type": "object",
+  "required": ["assets"],
+  "properties": {
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "path"],
+        "properties": {
+          "id": {"type": "string"},
+          "type": {"type": "string", "enum": ["audio", "image", "video"]},
+          "path": {"type": "string"},
+          "source": {"type": "string"},
+          "voice": {"type": "string"},
+          "duration_sec": {"type": "number", "minimum": 0},
+          "url": {"type": "string", "format": "uri"},
+          "license_note": {"type": "string"},
+          "used_in_beats": {"type": "array", "items": {"type": "integer"}}
+        }
+      }
+    }
+  }
+}

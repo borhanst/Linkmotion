@@ -1,0 +1,39 @@
+{
+  "$id": "https://ai-news-agent/schemas/research_brief.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Research Brief",
+  "description": "Stage 1 (research) output: verified primary source, data points, corroborating sources, visual needs.",
+  "type": "object",
+  "required": ["primary_source", "data_points"],
+  "properties": {
+    "primary_source": {
+      "type": "object",
+      "properties": {
+        "url": {"type": "string", "format": "uri"},
+        "title": {"type": "string"},
+        "publication_date": {"type": "string"}
+      }
+    },
+    "data_points": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["fact", "url"],
+        "properties": {
+          "fact": {"type": "string"},
+          "url": {"type": "string", "format": "uri"},
+          "source_type": {"type": "string", "enum": ["vendor-reported", "independent", "primary"]}
+        }
+      }
+    },
+    "corroborating_sources": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "visual_needs": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  }
+}

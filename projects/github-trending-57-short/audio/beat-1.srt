@@ -1,0 +1,8 @@
+1
+00:00:00,100 --> 00:00:04,300
+Thirty-five open-source projects are trending on GitHub right now.
+
+2
+00:00:04,250 --> 00:00:06,812
+Here are the ones worth your time.
+

@@ -1,0 +1,37 @@
+# AI News Agent - Global Configuration
+#
+# An OpenMontage-style, instruction-driven video production system for
+# AI news / LLM model-release videos, built on top of the user's existing
+# skill set (Remotion, web-explainer-video-animation, edge-tts, Playwright).
+
+llm:
+  provider: anthropic            # anthropic | openai | gemini | openrouter | ollama
+  model: null                    # null = use provider default
+  temperature: 0.7
+  max_tokens: 4096
+
+budget:
+  mode: warn                     # observe | warn | cap
+  total_usd: 10.00
+  reserve_pct: 0.10              # holdback for retries / cleanup
+  single_action_approval_usd: 0.50
+  require_approval_for_new_paid_tool: false
+
+checkpoint:
+  policy: guided                 # guided | manual_all | auto_noncreative
+  storage_dir: pipeline          # relative to project root
+
+output:
+  default_format: mp4
+  default_codec: libx264
+  default_audio_codec: aac
+  default_resolution: "1920x1080"
+  default_fps: 30
+  default_crf: 23
+
+paths:
+  pipeline_dir: pipeline_defs
+  library_dir: projects
+  styles_dir: styles
+  skills_dir: skills
+  output_dir: out

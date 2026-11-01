@@ -1,0 +1,18 @@
+{
+  "$id": "https://ai-news-agent/schemas/render_report.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Render Report",
+  "description": "Stage 6 (compose) output: result of the Remotion render.",
+  "type": "object",
+  "required": ["out_mp4", "ok"],
+  "properties": {
+    "slug": {"type": "string"},
+    "out_mp4": {"type": "string"},
+    "duration_sec": {"type": "number", "minimum": 0},
+    "fps": {"type": "integer", "minimum": 1},
+    "crf": {"type": "integer"},
+    "composition_id": {"type": "string"},
+    "ok": {"type": "boolean"},
+    "error": {"type": "string"}
+  }
+}

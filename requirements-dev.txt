@@ -1,0 +1,3 @@
+# AI News Agent - dev dependencies
+pytest>=8.0
+pytest-cov>=4.0

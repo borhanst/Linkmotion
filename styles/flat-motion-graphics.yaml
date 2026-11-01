@@ -1,0 +1,39 @@
+name: flat-motion-graphics
+category: motion-graphics
+mood: energetic, bold
+best_for: [social-media, tiktok, startups]
+
+typography:
+  display_face: "Space Grotesk"
+  ui_face: "Inter"
+  display_weight: 700
+  ui_weight: 500
+  track_kicker: "0.2em"
+  tabular_numerals: true
+
+palette:
+  background: "#0A0A0F"
+  surface: "#14141C"
+  primary_text: "#FFFFFF"
+  secondary_text: "#A0A4B8"
+  primary: "#FF3D3D"
+  secondary: "#FFB800"
+  accent: "#00E5FF"
+  bg_gradient: ["#0A0A0F", "#1A0A14"]
+
+motion:
+  default_easing: "spring"
+  spring_config: {damping: 11, mass: 0.6, stiffness: 120}
+  camera_push: "1 -> 1.04 across the scene"
+  parallax: {background: "0.3-0.5% scale/s", foreground: "1-2%"}
+
+audio:
+  narration_primary: true
+  music_bed: "upbeat, ducked under narration"
+  sfx: ["whoosh", "pop", "click", "impact"]
+
+quality:
+  grain: "3-5% procedural"
+  vignette: true
+  color_grade: "high contrast, saturated accent"
+  soft_offset_shadows: true

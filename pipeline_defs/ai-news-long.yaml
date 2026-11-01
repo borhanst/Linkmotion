@@ -1,0 +1,191 @@
+name: ai-news-long
+version: "1.0"
+description: >
+  7-8+ minute long-form YouTube deep-dive or news roundup about AI news / LLM
+  model releases. 12-20 scenes, 16:9, subscribe-ask scene, engagement overlays,
+  chapter timestamps in the description.
+category: generated
+stability: production
+
+default_checkpoint_policy: guided
+
+extensions:
+  custom_scripts: true
+  custom_playbooks: true
+  custom_skills: true
+  custom_tools: false
+
+required_skills:
+  - pipelines/ai-news-long/executive-producer
+  - pipelines/ai-news-long/research-director
+  - pipelines/ai-news-long/proposal-director
+  - pipelines/ai-news-long/script-director
+  - pipelines/ai-news-long/storyboard-director
+  - pipelines/ai-news-long/asset-director
+  - pipelines/ai-news-long/compose-director
+  - pipelines/ai-news-long/publish-director
+  - meta/reviewer
+  - meta/checkpoint-protocol
+  - meta/onboarding
+
+orchestration:
+  mode: executive-producer
+  skill: pipelines/ai-news-long/executive-producer
+  budget_default_usd: 0.00
+  max_revisions_per_stage: 3
+  max_send_backs: 3
+  max_wall_time_minutes: 40
+
+compatible_playbooks:
+  recommended:
+    - clean-professional
+    - minimalist-diagram
+  also_works:
+    - flat-motion-graphics
+  custom_allowed: true
+
+stages:
+  - name: research
+    skill: pipelines/ai-news-long/research-director
+    produces:
+      - research_brief
+    tools_available:
+      - web_search
+      - youtube_source
+      - broll
+    checkpoint_required: false
+    human_approval_default: false
+    review_focus:
+      - Landscape mapped with at least 3 existing pieces
+      - Data points specific and sourced
+      - At least 3 genuinely different angles
+      - All angles grounded in specific findings
+    success_criteria:
+      - "research_brief has >= 3 data_points with URLs"
+      - ">= 3 angles_discovered with grounded_in references"
+
+  - name: proposal
+    skill: pipelines/ai-news-long/proposal-director
+    required_artifacts_in:
+      - research_brief
+    produces:
+      - proposal_packet
+      - decision_log
+    tools_available: []
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Concept options genuinely different
+      - Production plan reflects real tool availability
+      - Cost estimate itemized
+    success_criteria:
+      - "proposal_packet has >= 3 concept_options"
+      - selected_concept references a valid concept_id
+      - approval.status is "approved" or "approved_with_changes"
+
+  - name: script
+    skill: pipelines/ai-news-long/script-director
+    required_artifacts_in:
+      - proposal_packet
+    optional_artifacts_in:
+      - research_brief
+    produces:
+      - script
+    tools_available: []
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Minimum 7-8 minutes of narration
+      - "Hook (5-10s) -> early subscribe-ask -> setup -> 3-5 main sections -> recap -> CTA"
+      - Enhancement cue density: 1 per 8-10 seconds
+    success_criteria:
+      - script has 12-20 scenes
+      - "total_duration_sec >= 480"
+
+  - name: storyboard
+    skill: pipelines/ai-news-long/storyboard-director
+    required_artifacts_in:
+      - script
+    produces:
+      - storyboard
+    tools_available:
+      - browser_capture
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Full script duration covered, no gaps
+      - Visual variety: no 3+ consecutive scenes of same type
+      - Every anchor verbatim from the inspected page
+      - "Subscribe-ask scene marked purpose=subscribe_ask"
+      - 2-3 engagement_overlay popups placed after the subscribe-ask scene
+    success_criteria:
+      - storyboard is schema-valid
+      - ">= 3 scene types used"
+      - subscribe_ask scene present
+
+  - name: assets
+    skill: pipelines/ai-news-long/asset-director
+    required_artifacts_in:
+      - storyboard
+    optional_artifacts_in:
+      - script
+    produces:
+      - asset_manifest
+    required_tools:
+      - tts
+    optional_tools:
+      - browser_capture
+    tools_available:
+      - tts
+      - browser_capture
+      - broll
+    checkpoint_required: true
+    human_approval_default: false
+    review_focus:
+      - All asset files exist
+      - Narration covers all scenes
+      - Word-level timestamps present
+    success_criteria:
+      - asset_manifest schema-valid
+      - every scene has audio
+
+  - name: compose
+    skill: pipelines/ai-news-long/compose-director
+    required_artifacts_in:
+      - storyboard
+      - asset_manifest
+    produces:
+      - render_report
+    required_tools:
+      - video_compose
+    tools_available:
+      - video_compose
+    checkpoint_required: true
+    human_approval_default: false
+    review_focus:
+      - Output exists and plays
+      - "Duration >= 480s"
+      - Captions word-synced
+      - 16:9 framing, chapter transitions per motion system
+    success_criteria:
+      - render_report valid
+      - "ffprobe duration >= 480s"
+
+  - name: publish
+    skill: pipelines/ai-news-long/publish-director
+    required_artifacts_in:
+      - render_report
+    produces:
+      - publish_log
+    tools_available:
+      - metadata
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - 5-8 title options, ranked, primary marked
+      - Chapter timestamps match scene boundaries
+      - Hashtags at bottom
+      - Thumbnail 1280x720, 2-3 variants
+    success_criteria:
+      - publish_log schema-valid
+      - titles.md, description.md, tags.json, thumbnail present

@@ -1,0 +1,44 @@
+{
+  "$id": "https://ai-news-agent/schemas/storyboard.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Storyboard",
+  "description": "Stage 4 (storyboard) output: settings + scenes the capture and render stages consume.",
+  "type": "object",
+  "required": ["settings", "scenes"],
+  "properties": {
+    "settings": {
+      "type": "object",
+      "properties": {
+        "color_scheme": {"type": "string"},
+        "voice": {"type": "object"},
+        "viewport": {"type": "array", "items": {"type": "integer"}, "minItems": 2, "maxItems": 2},
+        "scale": {"type": "number", "exclusiveMinimum": 0},
+        "output_size": {"type": "array", "items": {"type": "integer"}, "minItems": 2, "maxItems": 2}
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "narration"],
+        "properties": {
+          "id": {"type": "string"},
+          "type": {"type": "string", "enum": ["card", "web", "media", "social"]},
+          "kicker": {"type": "string"},
+          "title": {"type": "string"},
+          "subtitle": {"type": "string"},
+          "bullets": {"type": "array", "items": {"type": "string"}},
+          "footer": {"type": "string"},
+          "url": {"type": "string", "format": "uri"},
+          "actions": {"type": "array"},
+          "src": {"type": "string"},
+          "posts": {"type": "array"},
+          "narration": {"type": "string"},
+          "purpose": {"type": "string"},
+          "engine": {"type": "string", "enum": ["remotion", "hyperframes"]}
+        }
+      }
+    }
+  }
+}

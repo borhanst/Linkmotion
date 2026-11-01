@@ -1,0 +1,25 @@
+{
+  "$id": "https://ai-news-agent/schemas/broll.json",
+  "type": "object",
+  "required": ["query", "results"],
+  "properties": {
+    "query": {"type": "string"},
+    "count": {"type": "integer"},
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "url"],
+        "properties": {
+          "kind": {"type": "string", "enum": ["image", "video", "social", "user"]},
+          "url": {"type": "string"},
+          "title": {"type": "string"},
+          "snippet": {"type": "string"},
+          "source_url": {"type": "string"},
+          "license_note": {"type": "string"},
+          "local_path": {"type": "string"}
+        }
+      }
+    }
+  }
+}

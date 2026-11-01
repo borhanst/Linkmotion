@@ -1,0 +1,39 @@
+name: clean-professional
+category: motion-graphics
+mood: polished, trustworthy
+best_for: [corporate, educational, saas]
+
+typography:
+  display_face: "Inter"
+  ui_face: "Inter"
+  display_weight: 700
+  ui_weight: 400
+  track_kicker: "0.2em"
+  tabular_numerals: true
+
+palette:
+  background: "#0B1D3A"
+  surface: "#12294F"
+  primary_text: "#F4F7FB"
+  secondary_text: "#9FB0C9"
+  primary: "#1F6FEB"
+  secondary: "#6BB6FF"
+  accent: "#FFB020"
+  bg_gradient: ["#0B1D3A", "#12294F"]
+
+motion:
+  default_easing: "spring"
+  spring_config: {damping: 12, mass: 0.6, stiffness: 120}
+  camera_push: "1 -> 1.04 across the scene"
+  parallax: {background: "0.3-0.5% scale/s", foreground: "1-2%"}
+
+audio:
+  narration_primary: true
+  music_bed: "low, ducked under narration (-18 to -22dB)"
+  sfx: ["whoosh", "pop", "click"]
+
+quality:
+  grain: "3-5% procedural"
+  vignette: true
+  color_grade: "one consistent grade across all scenes"
+  soft_offset_shadows: true
