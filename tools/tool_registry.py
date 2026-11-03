@@ -116,3 +116,6 @@ def main() -> int:
     print("\nCapability catalog:")
     print(json.dumps(registry.capability_catalog(), indent=2))
     return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())

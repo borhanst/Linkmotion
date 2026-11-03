@@ -104,6 +104,7 @@ Out of the box, `make setup` gives you:
 | Composition | Remotion | React-based programmatic video, captions, animations |
 | Post-production | FFmpeg | Encoding, subtitle burn-in, audio mixing |
 | Research | web_search | Live web search to ground every claim |
+| Social post | twitter_post | Fetch a Twitter/X post URL into structured card data (same design card) and capture a high-resolution screenshot of that post's design card. Keyless: Twitter's oEmbed endpoint + page metadata. x.com blocks automated full-page screenshots, so the screenshot is a faithful Headless-Chromium render of the post's card design. |
 
 ## Contributing
 
