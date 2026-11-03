@@ -70,4 +70,53 @@ as context - NOT to copy:
 
 - At least 2 cited data points with URLs.
 - `primary_source` set.
+
+## Lessons learned (YouTube-source remakes)
+
+When the user says "make a video based on this YouTube URL" and wants a **different script and visual**:
+
+1. `youtube_source.fetch(url)` reliably returns `title`, `channel`, and `thumbnail`, but `transcript` and `description` are often **empty** (keyless oEmbed/timedtext endpoints are limited). Do not depend on the transcript.
+2. Always supplement with `web_search` to find 2-3 corroborating sources and verify every number/date/price you will narrate. Ground claims in pages you actually capture (browser_capture).
+3. Record the channel and upload date from the watch page/oEmbed; cite the primary source (lab blog / help center / pricing page) in research.md and the verdict footer.
+4. Do not copy the source video's wording or structure. Write an original hook and angle; use the source only for topic discovery.
+
+### Output (research.md) additions
+- `primary_source`: the lab/help-center/pricing URL you will show on screen.
+- `transcript_available`: boolean (true/false) — whether youtube_source returned a transcript.
+- `supplement_sources`: 2-3 web_search URLs used to verify claims.
 - Publication date recorded.
+
+## Brand & Design System Research (before any video plan)
+
+Before writing a script or choosing a concept, research the brand's actual visual identity so the video looks natural and professional — not a generic template slapped with a logo.
+
+### 1. Find the brand's real design assets
+- **Logo SVG**: Search the brand's site for an SVG logo (press kit, brand assets, footer, `brand.svg`, `logo.svg`, or GitHub org page). Prefer the official vector mark over a screenshot.
+- **Color combination**: Extract the brand's primary/secondary/accent colors from its website CSS, press kit, or design tokens. Record them as hex values (e.g. Claude purple `#A855F7`, amber `#F59E0B`).
+- **Typography**: Note the brand's display and UI fonts from its site (Inter, Space Grotesk, etc.) and whether it uses bold/heavy weights for headlines.
+- **Motion style**: Look for the brand's existing video ads, product demos, or landing-page animations. Note easing (spring vs linear), transition types (slide, scale, fade), and whether it uses 3D, glassmorphism, or flat 2D.
+
+### 2. What to capture in research.md
+Add a `design_system` block:
+
+```markdown
+## Design System
+- brand: <company name>
+- logo_svg_url: <URL to official SVG logo, or "not found">
+- primary_color: <hex>
+- secondary_color: <hex>
+- accent_color: <hex>
+- dark_bg: <hex for video background>
+- typography_display: <font name>
+- typography_ui: <font name>
+- motion_style: <spring | elastic | linear | bounce>
+- reference_urls: [<brand site>, <press kit>, <brand video>]
+- visual_elements: [<icon set>, <chart style>, <card treatment>]
+```
+
+### 3. Rules for professional look
+- **Use the actual brand logo SVG**, never a low-res PNG screenshot or a hand-drawn substitute.
+- **Use the brand's real hex colors** for backgrounds, accents, and text — do not invent a palette.
+- **Match the brand's motion language**: if the brand uses springy bouncy UI, use `back.out`/`elastic` GSAP easing; if it uses clean corporate fades, use `power3.out` with opacity only.
+- **One dominant brand color + one accent**, never a rainbow. Keep the rest dark/neutral so the brand color pops.
+- **Safe zones**: keep essential text inside the center 80% horizontally and clear of the bottom ~15-20% (Shorts UI overlays).

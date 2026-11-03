@@ -64,5 +64,17 @@ Timing: `"when": "<phrase from narration>"` fires as that word is spoken;
 - Schema-valid storyboard.
 - At least 3 scene types used.
 - Loop-friendly last beat.
+
+## Design system application (storyboard stage)
+Apply the approved `design_system` from `proposal.md` to every scene so the video looks like one cohesive brand piece.
+
+1. **Background**: set each scene's bg to `design_system.dark_bg` (or brand-approved variant). Add an animated mesh-gradient using the brand's primary + secondary colors as blurred blobs.
+2. **Logo**: place the official brand logo SVG (from `design_system.logo_svg_url`) in the hook and verdict scenes. Size it small and tasteful — a watermark, not a dominant block.
+3. **Colors**: use `primary_color` for headlines and key numbers, `secondary_color` for accents/glows, `accent_color` for CTAs and secondary highlights. Keep body text neutral (`#CBD5E1` / `#FFFFFF`).
+4. **Typography**: use `typography_display` for big headlines (kicker/title), `typography_ui` for captions and small text. Match the brand's font weights.
+5. **Motion**: use `design_system.motion_style` for GSAP easing — `spring`/`elastic` = `back.out`/`elastic.out`; `linear`/`bounce` = `power3.out`/`bounce.out`. Never mix easing styles across beats.
+6. **Visual elements**: add brand-appropriate icons (chart bars, meter fills, checkmarks, pill badges) rendered in the brand's accent colors. Every number spoken must appear on screen in the brand palette.
+7. **Verify against research.md**: every color/font/motion choice must trace back to the researched brand assets, not invented.
+
 - Every anchor verbatim from inspect output.
 - Verdict card has `footer` with sources + date.

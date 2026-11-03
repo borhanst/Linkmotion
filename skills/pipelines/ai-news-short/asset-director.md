@@ -48,4 +48,12 @@ Optional: `browser_capture`
 
 - Schema-valid asset manifest.
 - Every beat has an audio file.
+
+## Lessons learned (asset generation)
+
+1. **edge-tts dependency**: The `edge_tts` Python package and `ffprobe` binary may not be installed. Before the asset stage, run:
+   `pip install edge-tts --break-system-packages` (and confirm `ffprobe` is on PATH).
+2. Generate **one mp3 + one srt per beat** with `edge-tts --write-media <beat>.mp3 --write-subtitles <beat>.srt`. Measure real duration with ffprobe and write `actual_duration_sec` back into each script beat.
+3. Store page captures under `projects/<slug>/assets/raw/web/<domain>/` (e.g. `claude.com/shot-1.png`) and reference those relative paths in `assets/manifest.json`.
+4. Every beat must have an audio file; every `web` scene must have at least one capture. The reviewer checks that all manifest `path`s resolve to existing files.
 - Every `web` scene has captures.

@@ -55,7 +55,7 @@ python -m tools.tool_registry
 |-------|------|---------|----------------------|
 | Remotion | `core/remotion.md` | React-based composition | `remotion-best-practices`, `remotion` |
 | HyperFrames | `core/hyperframes.md` | HTML-based composition (alternative engine) | `hyperframes`, `hyperframes-html-authoring` |
-| edge-tts | `core/edge-tts.md` | Male-voice narration, word timestamps | `remotion-video-common` |
+| HTML Render | `core/html-render.md` | Playwright recording of HTML/GSAP pages | `web-explainer-video` |
 
 ## Engine selection
 
@@ -78,7 +78,7 @@ any beat better expressed as HTML/CSS.
 | Skill | File | Trigger |
 |-------|------|---------|
 | Storytelling | `creative/storytelling.md` | Narrative structure, hooks, pacing |
-| B-Roll Planning | `creative/broll-planning.md` | Supplementary footage sourcing from web/social/user files |
+| B-Roll Planning | `creative/broll-planning.md` | Supplementary footage sourcing from web/social/user files |\n| Lower Thirds | `creative/lower-thirds.md` | Reusable GSAP lower-third overlay |\n| Page Transitions | `creative/page-transitions.md` | Reusable GSAP page-transition treatment |
 
 ## Pipeline Type Skills
 

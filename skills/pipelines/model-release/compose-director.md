@@ -109,3 +109,7 @@ Preview each beat before the next.
 - ffprobe duration inside 60-120s.
 - Captions word-synced.
 - Aspect ratio matches the proposal.
+
+## HTML renderer (default)
+
+Default engine is now plain HTML + GSAP/Anime.js recorded via Playwright (`tools/html_render.py`). See `skills/core/html-render.md`. Lower thirds: `components/html/lower-third.html`. Page transitions: `components/html/page-transition.html`.

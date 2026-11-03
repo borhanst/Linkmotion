@@ -120,3 +120,35 @@ Preview each beat before the next.
 - Captions word-synced.
 - 9:16 safe-zone check.
 - Every beat has an explicit, logged engine decision.
+
+## HTML renderer (default)
+
+Default engine is now plain HTML + GSAP/Anime.js recorded via Playwright (`tools/html_render.py`). See `skills/core/html-render.md`. Lower thirds: `components/html/lower-third.html`. Page transitions: `components/html/page-transition.html`.
+
+## Lessons learned (composition / render)
+
+### Default engine: html_render (Playwright) — not Remotion
+For Shorts built from page captures and cards, use the HTML engine. It requires only Playwright + ffmpeg (no Node/Remotion install). Load GSAP from CDN (`https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js`) inside self-contained HTML.
+
+### Per-beat authoring (1080x1920 Shorts)
+- Author each beat as self-contained `composition.html` with inline GSAP animations that complete within `duration_sec`.
+- Use viewport `[1080, 1920]`, fps 30, crf 23.
+- Add a dark mesh-gradient background + brand accent colors + a bottom caption bar synced to the narration phrase.
+- Never more than two `web` scenes in a row; open/close with `card` scenes.
+
+### Render + mux + concat (per beat)
+1. `html_render.render(composition.html, renders/beat-N.mp4, duration_sec=..., viewport=[1080,1920])` → video-only MP4.
+2. Mux with edge-tts audio: `ffmpeg -y -i renders/beat-N.mp4 -i audio/beat-N.mp3 -c:v copy -c:a aac -shortest renders/beat-N-av.mp4`
+3. Concatenate all `beat-N-av.mp4` into `out/<slug>.mp4` with ffmpeg concat (`-c copy`).
+4. Verify final duration with ffprobe (must be inside 45-75s).
+
+### Review after compose
+Run `python -m lib.reviewer <slug> compose projects/<slug>/render_report.json` and confirm output exists, duration inside window, and engine decisions logged.
+
+### Design system implementation (compose stage)
+When authoring each `composition.html`:
+- Inline the brand's `primary_color`, `secondary_color`, `accent_color`, and `dark_bg` from `proposal.md` → `design_system`.
+- Embed the brand logo SVG (from `design_system.logo_svg_url`) as an inline `<svg>` in hook/verdict scenes.
+- Apply `typography_display`/`typography_ui` via inline CSS `font-family`.
+- Use GSAP easing matching `design_system.motion_style` (spring → `back.out`/`elastic.out`; linear → `power3.out`).
+- Keep the same palette and easing across all 5 beats so the video feels like one brand piece.

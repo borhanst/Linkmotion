@@ -327,10 +327,9 @@ def test_engine_selector_heuristics() -> None:
     assert resolve_engine({"type": "card", "engine": "hyperframes"}) == "hyperframes"
     assert resolve_engine({"type": "card", "engine": "remotion"}) == "remotion"
     # Heuristic fallback: web/media/social -> hyperframes, everything else -> remotion
-    assert recommend_engine({"type": "web"}) == CompositionEngine.HYPERFRAMES.value
-    assert recommend_engine({"type": "media"}) == CompositionEngine.HYPERFRAMES.value
-    assert recommend_engine({"type": "social"}) == CompositionEngine.HYPERFRAMES.value
-    assert recommend_engine({"type": "card"}) == CompositionEngine.REMOTION.value
+    assert recommend_engine({"type": "web"}) == CompositionEngine.HTML.value
+    assert recommend_engine({"type": "media"}) == CompositionEngine.HTML.value
+    assert recommend_engine({"type": "card"}) == CompositionEngine.HTML.value
 
 
 def test_engine_selector_health() -> None:
@@ -350,3 +349,29 @@ def test_engine_selector_missing_source(tmp_path: Path, monkeypatch) -> None:
     assert out["ok"] is False
     assert "error" in out
     assert out["engine"] == "remotion"
+
+
+# --------------------------------------------------------------------------- #
+# HTML render (GSAP/Anime.js)
+# --------------------------------------------------------------------------- #
+
+def test_html_render_registers() -> None:
+    from tools.tool_registry import ToolRegistry
+    r = ToolRegistry()
+    r.discover()
+    assert "html_render" in r._tools
+    assert r.get("html_render").provider == "playwright-html"
+
+
+def test_html_render_health() -> None:
+    from tools.html_render import HtmlRenderTool
+    h = HtmlRenderTool().health()
+    assert h["status"] in {"available", "unavailable", "degraded"}
+    assert "missing_dependencies" in h
+
+
+def test_html_skill_templates_reference_gsap() -> None:
+    from pathlib import Path
+    for p in ["skills/creative/lower-thirds.md", "skills/creative/page-transitions.md"]:
+        text = Path(p).read_text(encoding="utf-8")
+        assert "gsap" in text.lower()

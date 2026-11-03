@@ -110,3 +110,7 @@ Preview each scene before the next. Sanity-check total duration against the
 - ffprobe duration >= 480s.
 - Captions word-synced.
 - 16:9 framing, chapter transitions per motion system.
+
+## HTML renderer (default)
+
+Default engine is now plain HTML + GSAP/Anime.js recorded via Playwright (`tools/html_render.py`). See `skills/core/html-render.md`. Lower thirds: `components/html/lower-third.html`. Page transitions: `components/html/page-transition.html`.
