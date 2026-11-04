@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <!-- KIT: hook-card | topic kicker + big headline + subtitle
-     Clone per beat, edit ONLY the marked CONTENT slots. Theme comes from tokens.css. -->
+     Clone per beat, edit ONLY the marked CONTENT slots. Theme comes from tokens.css. NOTE: the ../../.. path assumes the CLONED
+     location (projects/<slug>/src/html/_kit/ or src/html/<beat>/) - 3 levels up
+     to the project root. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Hook Card</title>
-<link rel="stylesheet" href="../../style/tokens.css">
+<link rel="stylesheet" href="../../../style/tokens.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
+  * { margin:0; padding:0; box-sizing:border-box; }
   .stage { position:relative; z-index:1; width:100%; height:100%;
            display:flex; flex-direction:column; justify-content:center; align-items:center;
            padding:0 90px; text-align:center; }

@@ -51,7 +51,7 @@ python -m tools.tool_registry
 | `video_compose` | `html_render` | Frame-stepped deterministic Playwright render of HTML/GSAP pages |
 | `metadata` | `metadata` | Titles / description / tags / thumbnail |
 
-Libs: `lib/captions.py` burns word-timed 1-2-word caption chunks into beat HTML (GSAP-driven, rendered by the frames mode).
+Libs: `lib/captions.py` burns word-timed 1-2-word caption chunks into beat HTML (GSAP-driven, rendered by the frames mode). `tools/scene_doctor.py` statically QA's scene HTML before rendering (paths, images, GSAP, opacity-reveal bugs, caption anchoring) - run it on every beat before `html_render`.
 
 ## Core Skills
 

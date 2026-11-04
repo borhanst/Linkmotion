@@ -35,6 +35,14 @@ _CSS_TEMPLATE = """
       z-index: 50;
     }
     %SELECTOR% .cap-chunk {
+      /* absolute + centered: every chunk anchors to ONE bottom-bar line.
+         Must be in computed style BEFORE the gsap script runs (this <style>
+         precedes the <script> in the injected block), so gsap preserves the
+         translateX(-50%) when it tweens y/scale. Never stack chunks inline. */
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
       display: inline-block;
       font-family: %FONT_FAMILY%;
       font-size: %FONT_SIZE%px;

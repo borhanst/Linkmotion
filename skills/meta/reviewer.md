@@ -38,6 +38,11 @@ prose) and are loaded automatically by artifact name.
 8. **Safe zones** - no key text outside platform safe margins.
 9. **Audio clean** - no clipping, abrupt cuts, or distracting noise.
 10. **Decision log current** - every meaningful choice is logged.
+11. **Frames verified** - for any rendered output, frames were extracted at key
+    moments (reveals, highlights, start/middle/end) and actually viewed: theme
+    applied, images loaded, overlays on target, captions one centered line,
+    safe zones respected. `python -m tools.scene_doctor` passed on every scene
+    HTML before rendering. "Render ok" alone is not verification.
 
 ## Semantic checks (beyond JSON Schema)
 

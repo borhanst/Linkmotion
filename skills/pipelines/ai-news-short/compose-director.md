@@ -146,7 +146,20 @@ For Shorts built from page captures and cards, use the HTML engine. It requires 
 6. Verify final duration with ffprobe (must be inside 45-75s).
 
 ### Review after compose
-Run `python -m lib.reviewer <slug> compose projects/<slug>/render_report.json` and confirm output exists, duration inside window, and engine decisions logged.
+Run `python -m lib.reviewer <slug> render_report projects/<slug>/render_report.json` and confirm output exists, duration inside window, and engine decisions logged.
+
+### Scene QA gate - before presenting ANY beat or the concat
+
+1. **Static check (cheap, first):** `python -m tools.scene_doctor projects/<slug>/src/html/` - catches broken stylesheet/image paths, GSAP issues, the `.from(opacity:0)`-on-hidden-element bug, and caption stacking before a single frame renders. Fix every FAIL.
+2. **Frame check (always):** extract frames at key moments and view them - `ffmpeg -y -i renders/beat-N.mp4 -ss <t> -vframes 1 /tmp/opencode/qa-bN.png`. Key moments: each highlight/reveal time from the storyboard actions, plus start/middle/end. Verify: theme applied, images visible, overlays on target, captions centered on one line, no overlap, 9:16 safe zones. See `skills/core/html-render.md` for the full failure-mode table.
+3. Only then preview to the user. Never present on the strength of `ok: true` alone - frame extraction has caught theme loss, missing captures, invisible elements, and caption stacking that all rendered "successfully".
+
+### Overlay/highlight pattern for web scenes (user preference)
+
+- NO stroked ring boxes - use **soft background highlights** (accent tint + glow, no border): `.hlmark { position:absolute; border-radius:14px; background:color-mix(in srgb, var(--accent) 30%, transparent); box-shadow:0 0 36px color-mix(in srgb, var(--accent) 45%, transparent); }`
+- Highlights live INSIDE the same wrapper as the screenshot so Ken-Burns zoom/pan moves them with the image - never position them in view coords while the image transforms independently.
+- Measure targets from the LIVE page (`Range.getBoundingClientRect` on the exact text), then convert: `image_px = (page_css - crop_offset) * device_scale_factor`. Never eyeball from a scaled-down screenshot.
+- If the interesting element sits near the crop edge, shift the image (`margin-left:-Npx`) and re-aim the zoom origin at it - verify the element is inside the view window at t=0 AND at max zoom.
 
 ### Design system implementation (compose stage)
 
