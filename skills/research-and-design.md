@@ -51,7 +51,7 @@ The tool also produces two artifacts:
 - `out/twitter_posts/<author>_<tweet_id>.html` — self-contained design card HTML
 - `out/twitter_posts/<author>_<tweet_id>.png` — 640×640 PNG of the card
 
-**Screenshot note**: x.com blocks raw-page keyless screenshots, so the PNG faithfully captures the post's design card (avatar, name, date, text, media, counts), not the raw page.
+**Screenshot note**: The PNG captures the **official Twitter embed widget** (widgets.js rendering the real tweet UI — avatar, verified badge, fonts, counts) inside headless Chromium, so it reads as authentic Twitter in the video. If the widget cannot render (offline/blocked), the tool falls back to a faithful recreation of the post's design card. Check `screenshot_method` in the output: `twitter_widget` = real UI, `playwright_card` = recreation.
 
 > **Enrichment**: Set `TWITTER_BEARER_TOKEN` in `.env` to get timestamps and counts. Without it, the tool still works keyless via oEmbed + page metadata.
 
@@ -135,7 +135,7 @@ Extract:
 | YouTube description empty (no `youtube_data_v3_api_key`) | Fall back to `web_search` for the video topic; use the video title as the primary source |
 | No Twitter links in description | Use `web_search` to find 2-3 authoritative sources on the topic; skip the Twitter-specific sections |
 | `TWITTER_BEARER_TOKEN` not set, counts/dates missing | Accept that `created_at`, `retweet_count`, etc. will be absent; still capture the tweet text and media |
-| x.com blocks raw-page screenshot | The tool renders the post's design card (not the raw page); this is expected behavior — the card image is still usable as a visual reference |
+| x.com blocks raw-page screenshot | `twitter_post` renders the official embed widget (real tweet UI); if that fails it falls back to a card recreation — check `screenshot_method` in the output |
 | Multiple Twitter links found | Process the first one (or ask the user which to prioritize); log all found URLs in the research notes |
 
 ## Example workflow

@@ -108,9 +108,12 @@ Preview each scene before the next. Sanity-check total duration against the
 
 - Output exists and plays.
 - ffprobe duration >= 480s.
-- Captions word-synced.
+- Captions: OFF by default for long-form. Only if the user explicitly asked for
+  captions, burn them - and they must be word-synced.
 - 16:9 framing, chapter transitions per motion system.
 
 ## HTML renderer (default)
 
-Default engine is now plain HTML + GSAP/Anime.js recorded via Playwright (`tools/html_render.py`). See `skills/core/html-render.md`. Lower thirds: `components/html/lower-third.html`. Page transitions: `components/html/page-transition.html`.
+Default engine is now plain HTML + GSAP/Anime.js rendered via Playwright (`tools/html_render.py`). See `skills/core/html-render.md`. Lower thirds: `components/html/lower-third.html`. Page transitions: `components/html/page-transition.html`.
+
+Render `mode="auto"` (default) uses **frame-stepped deterministic rendering**: the page's GSAP timeline is seeked to exact frame times and screenshotted per frame, so output is frame-accurate and reproducible. Captions: **do not burn captions by default for long-form**. Only burn word-timed 1-2-word chunks with `lib/captions.py` when the user explicitly asked for captions. Optional beat-boundary SFX: `tools/sfx.py` (synth + mix under narration).

@@ -69,21 +69,47 @@ def test_render_card_html_reproduced_file_matches_artifact() -> None:
 
 
 # --------------------------------------------------------------------------- #
-# Screenshot (playwright card render)
+# Screenshot (official widget render, card-recreation fallback)
 # --------------------------------------------------------------------------- #
 
 
-def test_capture_screenshot_renders_card() -> None:
+def test_capture_screenshot_prefers_official_widget() -> None:
     tool = TwitterPostTool()
     post = tool.fetch(REAL_TWEET)
     out = tool.capture_screenshot(post, width=640, height=640, output_dir="/tmp/kilo/twitter_tests")
+    assert out["ok"] is True
+    # Primary method: the official embed widget renders the real tweet UI.
+    assert out["method"] == "twitter_widget"
+    assert out["path"]
+    assert out["resolution"] and all(dim > 0 for dim in out["resolution"])
+    assert Path(out["path"]).exists()
+    assert "embed widget" in out["note"]
+
+
+def test_capture_card_fallback_renders_card() -> None:
+    tool = TwitterPostTool()
+    post = tool.fetch(REAL_TWEET)
+    out_path = Path("/tmp/kilo/twitter_tests/fallback.png")
+    out = tool._capture_card(post, out_path, width=640, height=640)
     assert out["ok"] is True
     assert out["method"] == "playwright_card"
     assert out["path"]
     assert out["resolution"] == (640, 640)
     assert Path(out["path"]).exists()
-    # The screenshot captures the post's rendered design card (not the raw page).
-    assert "post's design card" in out["note"]
+    # The fallback screenshot captures the post's rendered design card.
+    assert "design card" in out["note"]
+
+
+def test_widget_wrapper_html_contains_embed() -> None:
+    from tools.twitter_post import _widget_wrapper_html
+
+    html = _widget_wrapper_html(REAL_TWEET)
+    assert 'class="twitter-tweet"' in html
+    assert "platform.twitter.com/widgets.js" in html
+    # The tweet URL must be escaped inside the blockquote's <a href>.
+    import html as html_mod
+
+    assert html_mod.escape(REAL_TWEET) in html
 
 
 def test_health_is_available() -> None:

@@ -57,7 +57,25 @@ None required (all local / free).
 - At least 1 concept option.
 
 ## Design system selection (concept stage)
-Pick the visual system during proposal, not after scripting. Reference `research.md` → `design_system`.
+
+**Every video must have a UNIQUE style.** Generate the video's Style DNA at the
+proposal stage (not after scripting) via `skills/core/style-engine.md`:
+
+1. Run `lib.style_engine.ensure_style(slug, topic)` - deterministic per slug,
+   pushed away from recently-used genes by the uniqueness ledger
+   (`styles/style_history.jsonl`). Two projects must never share a signature.
+2. Render the style card and show it to the user with the proposal:
+   `python -m tools.html_render projects/<slug>/style/style-card.html
+   projects/<slug>/renders/style-card.mp4 --duration 5.5` (then mux or preview).
+3. Record the generated genes in `proposal.production_plan.design_system`
+   (palette/typography/motif/easing/caption/transition + the hexes from
+   tokens.css). Brand overrides (logo SVG, brand colors) can layer on top when
+   the source has a real brand identity - the generated system stays the base.
+4. **Apply consistently**: every beat uses the same tokens.css; foreground
+   animation uses the easing gene's GSAP string; background drift is always
+   `sine.inOut` perpetual.
+5. **Log the decision** in `decision_log.jsonl` with category `design_system`,
+   including the signature string for the uniqueness audit.
 
 1. **Confirm brand assets exist** — logo SVG URL, primary/secondary/accent hex colors, typography names. If the logo SVG is not found, plan a text-based wordmark using the brand's display font and colors instead of faking a logo.
 2. **Choose motion style** from `design_system.motion_style` (spring/elastic/linear/bounce). This dictates GSAP easing in every beat.

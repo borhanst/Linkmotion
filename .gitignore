@@ -15,7 +15,10 @@ downloads/
 eggs/
 .eggs/
 parts/
-lib/
+# NOTE: `lib/` (dir rule) would also ignore the project's own lib package.
+# Ignore contents instead, then re-include the project modules.
+lib/*
+!lib/*.py
 lib64/
 parts/
 sdist/

@@ -17,6 +17,21 @@ edge-tts --list-voices | grep -i male
 
 ## Recipe
 
+Use the `tts` tool (`tools/tts.py`) rather than calling the CLI by hand. It
+streams through the edge-tts library with `boundary="WordBoundary"`, so the
+returned `words` carry true per-word start/end offsets, and falls back to the
+CLI + SRT when the library is missing.
+
+```python
+from tools.tts import TTSTool
+r = TTSTool().synthesize(
+    "Anthropic renamed its Max 20x plan to Ultra.",
+    "projects/<slug>/audio/beat-1.mp3")
+# r.words -> [{"word": "Anthropic", "start": 0.1, "end": 0.738}, ...]
+```
+
+CLI equivalent (chunk-level cues only - no true word timestamps):
+
 ```bash
 edge-tts \
   --voice en-US-GuyNeural \
@@ -33,9 +48,10 @@ audio length, not an earlier estimate.
 
 ## Word-level timestamps
 
-Parse the `.srt` into word entries: `{"word": "...", "start": 1.2, "end": 3.4}`.
-Use these to sync on-screen captions and element entrances to the actual
-spoken words.
+`TTSTool.synthesize().words` holds one entry per spoken word with its real
+boundary: `{"word": "...", "start": 1.2, "end": 3.4}`. Feed them to the caption
+choreography in `lib/captions.py` to show 1-2 words at a time, animated in/out
+exactly on the spoken beat (see `skills/core/html-render.md` frames mode).
 
 ## Pronunciation
 

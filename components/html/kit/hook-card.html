@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- KIT: hook-card | topic kicker + big headline + subtitle
+     Clone per beat, edit ONLY the marked CONTENT slots. Theme comes from tokens.css. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hook Card</title>
+<link rel="stylesheet" href="../../style/tokens.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  .stage { position:relative; z-index:1; width:100%; height:100%;
+           display:flex; flex-direction:column; justify-content:center; align-items:center;
+           padding:0 90px; text-align:center; }
+  .kicker { font-size:30px; font-weight:700; letter-spacing:.24em; text-transform:uppercase;
+            color:var(--accent2); opacity:0; }
+  .title { font-family:var(--font-display); font-size:104px; font-weight:800; line-height:1.04;
+           margin:26px 0 26px; }
+  .title .word { display:inline-block; opacity:0; }
+  .title .hl { color:var(--accent); }
+  .subtitle { font-size:40px; color:var(--muted); opacity:0; max-width:880px; }
+</style>
+</head>
+<body>
+  <div class="motif"></div>
+  <div class="stage">
+    <!-- CONTENT START -->
+    <div class="kicker">THE ANGLE</div>
+    <h1 class="title">
+      <span class="word">Edit</span>
+      <span class="word">each,</span>
+      <span class="word">highlight,</span>
+      <span class="word">and</span>
+      <span class="word">word</span>
+      <span class="word hl">here</span>
+    </h1>
+    <p class="subtitle">Replace this subtitle with the beat's one-sentence payoff.</p>
+    <!-- CONTENT END -->
+  </div>
+<script>
+  // Easing family from the video's easing gene (default spring-pop)
+  const EASE = "back.out(1.7)";
+  gsap.set(".title .word", { y:90, rotateX:-40, transformOrigin:"50% 100%" });
+
+  const tl = gsap.timeline();
+  tl.from(".kicker",   { duration:.55, opacity:0, y:26, ease:EASE })
+    .to(".title .word",{ duration:.7, opacity:1, y:0, rotateX:0, stagger:.09, ease:EASE }, "-=.25")
+    .to(".subtitle",   { duration:.6, opacity:1, y:0, delay:.1, ease:"power3.out" }, "-=.30");
+
+  // background always breathing
+  gsap.to(".motif", { duration:9, scale:1.06, yoyo:true, repeat:-1, ease:"sine.inOut" });
+</script>
+</body>
+</html>

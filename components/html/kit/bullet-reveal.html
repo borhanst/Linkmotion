@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!-- KIT: bullet-reveal | kicker + 3-4 staggered bullets with marker pop -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bullet Reveal</title>
+<link rel="stylesheet" href="../../style/tokens.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  .stage { position:relative; z-index:1; width:100%; height:100%;
+           display:flex; flex-direction:column; justify-content:center; padding:0 110px; }
+  .kicker { font-size:28px; letter-spacing:.26em; text-transform:uppercase;
+            color:var(--accent2); font-weight:700; margin-bottom:60px; opacity:0; }
+  .bullets { list-style:none; display:flex; flex-direction:column; gap:44px; }
+  .bullets li { display:flex; align-items:center; gap:30px;
+                font-size:46px; font-weight:600; line-height:1.25; opacity:0; }
+  .dot { flex:none; width:20px; height:20px; border-radius:50%;
+         background:var(--accent); box-shadow:0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent); }
+  .bullets li:nth-child(2) .dot { background:var(--accent2); }
+  .bullets li:nth-child(3) .dot { background:var(--text); }
+  .num { font-family:var(--font-display); font-weight:900; color:var(--muted); font-size:30px;
+         margin-left:auto; opacity:0; }
+</style>
+</head>
+<body>
+  <div class="motif"></div>
+  <div class="stage">
+    <!-- CONTENT START -->
+    <div class="kicker">WHAT CHANGED</div>
+    <ul class="bullets">
+      <li><span class="dot"></span>First bullet replaces with a real finding</li>
+      <li><span class="dot"></span>Second bullet, grounded in a fetched page</li>
+      <li><span class="dot"></span>Third bullet with the concrete detail</li>
+    </ul>
+    <!-- CONTENT END -->
+  </div>
+<script>
+  const EASE = "back.out(1.7)";
+  const tl = gsap.timeline();
+  tl.from(".kicker", { duration:.5, opacity:0, y:24, ease:EASE })
+    .to(".bullets li", { duration:.55, opacity:1, x:0, stagger:.28, ease:EASE, startAt:{ x:-48 } })
+    .to(".num", { duration:.4, opacity:1, stagger:.1, ease:"power2.out" }, "-=.6");
+
+  gsap.to(".motif", { duration:9, scale:1.06, yoyo:true, repeat:-1, ease:"sine.inOut" });
+</script>
+</body>
+</html>

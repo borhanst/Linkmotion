@@ -1,4 +1,15 @@
-"""HTML render tool - record animated HTML (GSAP/Anime.js) pages to MP4 via Playwright."""
+"""HTML render tool - render animated HTML (GSAP/Anime.js) pages to MP4 via Playwright.
+
+Two rendering paths:
+
+- ``frames`` (default): frame-stepped, deterministic rendering. A captured
+  master GSAP timeline is paused and seeked to exact frame times while
+  Playwright screenshots each frame, which is then encoded with FFmpeg.
+  Output is buttery and frame-accurate - no dropped/extra frames regardless
+  of machine load.
+- ``record`` (fallback): the legacy real-time screen recording path, used when
+  the page has no drivable GSAP timeline (e.g. Anime.js or CSS-only pages).
+"""
 
 from __future__ import annotations
 
@@ -8,6 +19,73 @@ from pathlib import Path
 from typing import Any
 
 from tools.base_tool import BaseTool, ToolTier, ToolRuntime, run
+
+# Injected before any page script runs. When the page loads gsap (UMD builds
+# assign to window.gsap), we intercept the assignment and wrap the top-level
+# creation methods (to/from/fromTo/set/timeline) so every top-level tween and
+# timeline is captured into a single *paused* master timeline we can step.
+#
+# Wrapping is deferred to a microtask because UMD builds assign an empty
+# exports object first and populate it afterwards (the setter runs before
+# `gsap.to` exists yet). Microtasks run before the next classic <script>, so
+# author code created *later in the page* is always captured.
+#
+# Adding each top-level object at position 0 of the master preserves its own
+# internal `delay`, so the visual schedule matches real-time playback.
+_CAPTURE_JS = r"""
+(() => {
+  const MASTER = '__gsmaster';
+  const STATE = '__gscapture';
+  const capture = (g) => {
+    if (window[STATE]) return;
+    window[STATE] = true;
+    const master = g.timeline({ paused: true });
+    window[MASTER] = master;
+    const wrap = (fn) => function (...args) {
+      const o = fn.apply(this, args);
+      if (o && typeof o.totalDuration === 'function') {
+        try { master.add(o, 0); } catch (e) { /* non-addable object */ }
+      }
+      return o;
+    };
+    for (const k of ['to', 'from', 'fromTo', 'set']) {
+      if (typeof g[k] === 'function') g[k] = wrap(g[k]);
+    }
+    if (typeof g.timeline === 'function') g.timeline = wrap(g.timeline);
+  };
+  let gsapVal;
+  Object.defineProperty(window, 'gsap', {
+    configurable: true,
+    get() { return gsapVal; },
+    set(v) {
+      gsapVal = v;
+      if (v) Promise.resolve().then(() => { try { capture(v); } catch (e) { /* no-op */ } });
+    },
+  });
+})();
+"""
+
+# Runs after load. Returns true when a drivable master timeline exists.
+_SETUP_JS = r"""
+() => {
+  const m = window.__gsmaster;
+  if (!m || typeof m.totalDuration !== 'function') return false;
+  try { gsap.ticker.lagSmoothing(0); } catch (e) { /* older builds */ }
+  try { m.seek(0, false); } catch (e) { return false; }
+  return true;
+}
+"""
+
+# Seek the master timeline to an absolute time (pause -> seek keeps renders
+# deterministic because the playhead only moves when we move it).
+_SEEK_JS = r"""
+(t) => {
+  const m = window.__gsmaster;
+  if (!m) return false;
+  try { m.pause(0); m.seek(t, false); } catch (e) { return false; }
+  return true;
+}
+"""
 
 
 class HtmlRenderTool(BaseTool):
@@ -33,6 +111,13 @@ class HtmlRenderTool(BaseTool):
             "fps": {"type": "integer", "default": 30},
             "viewport": {"type": "array", "items": {"type": "integer"}, "default": [1920, 1080]},
             "crf": {"type": "integer", "default": 23},
+            "mode": {
+                "type": "string", "enum": ["auto", "frames", "record"], "default": "auto",
+                "description": (
+                    "frames = deterministic frame-stepped GSAP seek + screenshots; "
+                    "record = real-time screen recording; auto = frames, then record."
+                ),
+            },
         },
         "required": ["html_path", "out_mp4"],
     }
@@ -53,7 +138,105 @@ class HtmlRenderTool(BaseTool):
 
     def render(self, html_path: str, out_mp4: str, duration_sec: float = 6.0,
                fps: int = 30, viewport: list[int] | None = None,
-               crf: int = 23) -> dict[str, Any]:
+               crf: int = 23, mode: str = "auto") -> dict[str, Any]:
+        """Render an HTML composition to MP4.
+
+        mode="auto": frame-stepped GSAP rendering first; falls back to real-time
+        recording when the page has no captured GSAP master timeline.
+        """
+        if mode not in ("auto", "frames", "record"):
+            return {"ok": False, "out_mp4": out_mp4, "error": f"unknown mode: {mode}"}
+        if mode == "record":
+            return self._render_record(html_path, out_mp4, duration_sec, fps, viewport, crf)
+
+        result = self.render_frames(html_path, out_mp4, duration_sec, fps, viewport, crf)
+        if result["ok"] or mode == "frames":
+            return result
+        return self._render_record(html_path, out_mp4, duration_sec, fps, viewport, crf)
+
+    def render_frames(self, html_path: str, out_mp4: str, duration_sec: float = 6.0,
+                      fps: int = 30, viewport: list[int] | None = None,
+                      crf: int = 23) -> dict[str, Any]:
+        """Deterministic frame-stepped render.
+
+        Drives the page's captured GSAP master timeline to exact frame times
+        (t = i / fps) and screenshots each frame, so the output MP4 contains
+        exactly round(duration_sec * fps) frames, every run identical.
+        """
+        viewport = viewport or [1920, 1080]
+        html_file = Path(html_path).resolve()
+        if not html_file.is_file():
+            return {"ok": False, "out_mp4": out_mp4, "error": f"html not found: {html_file}"}
+
+        try:
+            from playwright.sync_api import sync_playwright  # type: ignore
+        except ImportError as e:
+            return {"ok": False, "out_mp4": out_mp4, "error": f"playwright unavailable: {e}"}
+
+        out_path = Path(out_mp4)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        frames_dir = out_path.parent / "_frames"
+        if frames_dir.exists():
+            shutil.rmtree(frames_dir, ignore_errors=True)
+        frames_dir.mkdir(parents=True, exist_ok=True)
+
+        total_frames = max(1, round(duration_sec * fps))
+        try:
+            with sync_playwright() as p:
+                browser = p.chromium.launch()
+                context = browser.new_context(
+                    viewport={"width": viewport[0], "height": viewport[1]},
+                    device_scale_factor=1,
+                )
+                context.add_init_script(_CAPTURE_JS)
+                page = context.new_page()
+                page.goto(html_file.as_uri(), wait_until="networkidle", timeout=60000)
+                # Fonts and the captured timeline must be ready before frame 0,
+                # otherwise identical runs could rasterize different pixels.
+                page.evaluate("document.fonts.ready.then(() => true)")
+                if not page.evaluate(_SETUP_JS):
+                    browser.close()
+                    return {"ok": False, "out_mp4": out_mp4,
+                            "error": "no drivable GSAP master timeline found (page may use Anime.js/CSS only)"}
+
+                # Warm-up frame: first screenshot may allocate buffers / settle
+                # first-paint state; discard it so frame 0 is clean.
+                page.evaluate(_SEEK_JS, 0)
+                page.screenshot(type="png")
+
+                for i in range(total_frames):
+                    t = i / float(fps)
+                    if not page.evaluate(_SEEK_JS, t):
+                        browser.close()
+                        return {"ok": False, "out_mp4": out_mp4, "error": f"GSAP seek failed at t={t}"}
+                    page.screenshot(path=str(frames_dir / f"f{i:05d}.png"), type="png")
+                browser.close()
+        except Exception as e:
+            return {"ok": False, "out_mp4": out_mp4, "error": f"frame render failed: {e}"}
+
+        cmd = [
+            "ffmpeg", "-y",
+            "-framerate", str(fps), "-start_number", "0",
+            "-i", str(frames_dir / "f%05d.png"),
+            "-frames:v", str(total_frames),
+            "-c:v", "libx264", "-preset", "medium", "-crf", str(crf),
+            "-pix_fmt", "yuv420p",
+            "-movflags", "+faststart",
+            str(out_path),
+        ]
+        r = run(cmd, timeout=1800)
+        shutil.rmtree(frames_dir, ignore_errors=True)
+        if not r["ok"]:
+            return {"ok": False, "out_mp4": out_mp4, "error": r["stderr"] or r["stdout"]}
+
+        dur = self._probe_duration(str(out_path))
+        return {"ok": True, "out_mp4": str(out_path), "duration_sec": dur,
+                "mode": "frames", "frames": total_frames, "fps": fps}
+
+    def _render_record(self, html_path: str, out_mp4: str, duration_sec: float = 6.0,
+                       fps: int = 30, viewport: list[int] | None = None,
+                       crf: int = 23) -> dict[str, Any]:
+        """Legacy real-time screen-recording render (fallback path)."""
         viewport = viewport or [1920, 1080]
         html_file = Path(html_path).resolve()
         if not html_file.is_file():
@@ -111,7 +294,8 @@ class HtmlRenderTool(BaseTool):
             return {"ok": False, "out_mp4": out_mp4, "error": r["stderr"] or r["stdout"]}
 
         dur = self._probe_duration(str(out_path))
-        return {"ok": True, "out_mp4": str(out_path), "duration_sec": dur}
+        return {"ok": True, "out_mp4": str(out_path), "duration_sec": dur,
+                "mode": "record", "fps": fps}
 
     def concat(self, scene_mp4s: list[str], out_mp4: str) -> dict[str, Any]:
         """Concatenate scene MP4s into one final video."""
@@ -148,8 +332,8 @@ class HtmlRenderTool(BaseTool):
 
     def execute(self, html_path: str, out_mp4: str, duration_sec: float = 6.0,
                 fps: int = 30, viewport: list[int] | None = None,
-                crf: int = 23) -> dict[str, Any]:
-        return self.render(html_path, out_mp4, duration_sec, fps, viewport, crf)
+                crf: int = 23, mode: str = "auto") -> dict[str, Any]:
+        return self.render(html_path, out_mp4, duration_sec, fps, viewport, crf, mode)
 
 
 def _main() -> None:  # pragma: no cover

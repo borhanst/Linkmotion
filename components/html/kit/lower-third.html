@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!-- KIT: lower-third | speaker/brand strip that slides in and out in sync with narration -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lower Third</title>
+<link rel="stylesheet" href="../../style/tokens.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  .stage { position:relative; z-index:1; width:100%; height:100%; }
+  .lt { position:absolute; left:90px; bottom:150px; display:flex; align-items:center;
+        gap:26px; opacity:0; transform:translateX(-70px); }
+  .lt .bar { width:10px; height:96px; background:var(--accent); border-radius:6px; }
+  .lt .stack { display:flex; flex-direction:column; gap:8px; }
+  .lt .name  { font-family:var(--font-display); font-size:52px; font-weight:800; }
+  .lt .role  { font-size:30px; color:var(--muted); }
+  .lt .tag   { font-size:22px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+               color:var(--accent2); }
+</style>
+</head>
+<body>
+  <div class="motif"></div>
+  <div class="stage">
+    <!-- CONTENT START -->
+    <div class="lt" id="lt">
+      <div class="bar"></div>
+      <div class="stack">
+        <div class="tag">REPLACE · CONTEXT TAG</div>
+        <div class="name">Replace Name / Topic</div>
+        <div class="role">Replace role, org or one-line context</div>
+      </div>
+    </div>
+    <!-- CONTENT END -->
+  </div>
+<script>
+  const EASE = "back.out(1.7)";
+  const HOLD_BEFORE_OUT = 3.2;   // narration-sync: seconds before exit
+  const tl = gsap.timeline();
+  tl.to("#lt", { opacity:1, x:0, duration:.6, ease:EASE })
+    .to("#lt", { opacity:1 }, "+=" + HOLD_BEFORE_OUT)
+    .to("#lt", { opacity:0, x:-70, duration:.45, ease:"power2.in" });
+</script>
+</body>
+</html>

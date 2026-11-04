@@ -173,6 +173,37 @@ def _retweet_card_html(post: TwitterPost) -> str:
 """
 
 
+def _widget_wrapper_html(url: str, theme: str = "light") -> str:
+    """Wrapper page that renders the official Twitter embed widget.
+
+    Loading widgets.js on a page containing a `blockquote.twitter-tweet`
+    pointing at the post URL makes Twitter's own script render the *real*
+    tweet UI (avatar, verified badge, fonts, counts) right inside our page —
+    no api key, no login. This is what we screenshot for the "proof" visual.
+    """
+    bg = "#15202b" if theme == "dark" else "#ffffff"
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  body {{ margin:0; padding:24px; background:{bg}; display:flex; justify-content:center;
+         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }}
+  .tweet-wrap {{ max-width:550px; width:100%; }}
+</style>
+</head>
+<body>
+  <div class="tweet-wrap">
+    <blockquote class="twitter-tweet" data-theme="{theme}" data-conversation="none" data-dnt="true">
+      <a href="{html_mod.escape(url)}"></a>
+    </blockquote>
+  </div>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</body>
+</html>
+"""
+
+
 # --------------------------------------------------------------------------- #
 # Tool
 # --------------------------------------------------------------------------- #
@@ -186,11 +217,12 @@ class TwitterPostTool(BaseTool):
     provider = "twitter-x"
     description = (
         "Fetch a Twitter/X post URL and extract the data to render the same design card "
-        "(official tweet card markup, author, text, date, media). Also captures a "
-        "high-resolution screenshot of the post's design card (headless Chromium), since "
-        "x.com blocks automated full-page screenshots. Keyless: uses Twitter's official "
-        "oEmbed endpoint + page metadata. Optionally requires TWITTER_BEARER_TOKEN for richer "
-        "fields (timestamps, counts)."
+        "(official tweet card markup, author, text, date, media). Captures a 'proof' "
+        "screenshot by rendering the official Twitter embed widget (widgets.js) in "
+        "headless Chromium and screenshotting the real tweet UI; falls back to a "
+        "self-contained card recreation if the widget cannot render. Keyless: uses "
+        "Twitter's official oEmbed endpoint + page metadata. Optionally requires "
+        "TWITTER_BEARER_TOKEN for richer fields (timestamps, counts)."
     )
     tier = ToolTier.SOURCE
     runtime = ToolRuntime.LOCAL
@@ -272,23 +304,78 @@ class TwitterPostTool(BaseTool):
         height: int = 640,
         output_dir: str | None = None,
     ) -> dict[str, Any]:
-        """Capture the post's design card as a high-resolution screenshot.
+        """Capture the post as a high-resolution "proof" visual.
 
-        x.com blocks automated full-page screenshots, so this renders a
-        faithful, self-contained copy of the post's card (markup, author,
-        media and text) in headless Chromium and screenshots that card.
+        Preferred method: the official Twitter embed widget (widgets.js) is
+        rendered in headless Chromium and the rendered iframe element is
+        screenshotted — this is the genuine Twitter UI. If widgets.js is
+        unreachable or fails to render, falls back to a faithful,
+        self-contained recreation of the post's card.
         Returns {"path", "ok", "method", "resolution", "note"}.
         """
         output_dir = output_dir or str(Path("out") / "twitter_posts")
         Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-        from playwright.sync_api import sync_playwright  # type: ignore
-
         fname = f"{re.sub(r'[^a-zA-Z0-9_-]', '_', post.author_screen_name)}_({post.url.split('/')[-1]}).png"
         out_path = Path(output_dir) / fname
         out_path.parent.mkdir(parents=True, exist_ok=True)
 
+        shot = self._capture_widget(post, out_path)
+        if not shot["ok"]:
+            shot = self._capture_card(post, out_path, width, height)
+        return shot
+
+    def _capture_widget(self, post: TwitterPost, out_path: Path) -> dict[str, Any]:
+        """Render the official embed widget and screenshot the real tweet UI."""
         try:
+            from playwright.sync_api import sync_playwright  # type: ignore
+        except Exception as e:  # pragma: no cover - defensive
+            return {"path": "", "ok": False, "method": "twitter_widget", "resolution": None,
+                    "note": f"playwright unavailable: {e}"}
+        try:
+            with sync_playwright() as p:
+                b = p.chromium.launch()
+                # Generous viewport so the full tweet renders before we clip to it.
+                pg = b.new_page(viewport={"width": 1280, "height": 1600})
+                pg.set_content(_widget_wrapper_html(post.url), wait_until="load")
+                try:
+                    # widgets.js replaces the blockquote with iframe#twitter-widget-N
+                    # (a second `rufous-sandbox` analytics iframe is created at 0x0).
+                    pg.wait_for_selector("iframe[id^='twitter-widget-']", timeout=20000)
+                except Exception:
+                    b.close()
+                    return {"path": "", "ok": False, "method": "twitter_widget", "resolution": None,
+                            "note": "embed widget did not render (network/blocked), falling back"}
+                frame_el = pg.locator("iframe[id^='twitter-widget-']").first
+                pg.wait_for_timeout(1500)  # let widget paint media/counts
+                frame_el.screenshot(path=str(out_path))
+                bbox = frame_el.bounding_box() or {}
+                b.close()
+        except Exception as e:  # pragma: no cover - defensive
+            return {"path": "", "ok": False, "method": "twitter_widget", "resolution": None,
+                    "note": f"widget capture failed: {e}"}
+        return {
+            "path": str(out_path),
+            "ok": True,
+            "method": "twitter_widget",
+            "resolution": (int(bbox.get("width", 0)), int(bbox.get("height", 0))),
+            "note": (
+                "Official Twitter embed widget (widgets.js) rendered in headless "
+                "Chromium — screenshot of the real tweet UI (avatar, name, date, "
+                "text, media, counts) usable as authentic proof in the video."
+            ),
+        }
+
+    def _capture_card(
+        self,
+        post: TwitterPost,
+        out_path: Path,
+        width: int = 640,
+        height: int = 640,
+    ) -> dict[str, Any]:
+        """Fallback: screenshot the faithful self-contained card recreation."""
+        try:
+            from playwright.sync_api import sync_playwright  # type: ignore
             with sync_playwright() as p:
                 b = p.chromium.launch()
                 pg = b.new_page(viewport={"width": width, "height": height})
@@ -314,8 +401,9 @@ class TwitterPostTool(BaseTool):
             "method": "playwright_card",
             "resolution": (width, height),
             "note": (
-                "Faithful rendering of the post's design card in headless Chromium; "
-                "x.com blocks raw page screenshots keylessly (playwright_card shows the post's card design)."
+                "Fallback: faithful recreation of the post's design card in headless "
+                "Chromium (official embed widget unavailable); covers the post's "
+                "card design but is not the raw x.com UI."
             ),
         }
 

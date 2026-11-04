@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- KIT: stat-countup | big number count-up + unit + label + source strip -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stat Count-up</title>
+<link rel="stylesheet" href="../../style/tokens.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  .stage { position:relative; z-index:1; width:100%; height:100%;
+           display:flex; flex-direction:column; justify-content:center; align-items:center;
+           padding:0 90px; text-align:center; }
+  .kicker { font-size:28px; letter-spacing:.26em; text-transform:uppercase; color:var(--accent2);
+            font-weight:700; opacity:0; }
+  .stat-line { display:flex; align-items:baseline; gap:18px; margin:26px 0; }
+  .stat-num { font-family:var(--font-display); font-size:230px; font-weight:900; line-height:1;
+              color:var(--accent); font-variant-numeric:tabular-nums; opacity:0; }
+  .stat-unit { font-family:var(--font-display); font-size:72px; font-weight:700; color:var(--muted); }
+  .label { font-size:44px; font-weight:600; max-width:900px; opacity:0; }
+  .source { position:absolute; bottom:150px; font-size:24px; color:var(--muted); opacity:0; }
+</style>
+</head>
+<body>
+  <div class="motif"></div>
+  <div class="stage">
+    <!-- CONTENT START -->
+    <div class="kicker">THE NUMBER</div>
+    <div class="stat-line">
+      <div class="stat-num" id="num">0</div>
+      <div class="stat-unit">%</div>
+    </div>
+    <p class="label">Replace with what this number means for the viewer.</p>
+    <div class="source">Source: replace with the fetched page we show</div>
+    <!-- CONTENT END -->
+  </div>
+<script>
+  const EASE = "back.out(1.7)";
+  const TARGET = 87;                      // CONTENT: set the real stat here
+  const count = { v: 0 };
+  const numEl = document.getElementById("num");
+
+  const tl = gsap.timeline();
+  tl.from(".kicker", { duration:.5, opacity:0, y:24, ease:EASE })
+    .set(".stat-num", { opacity:1 })
+    .to(count, { duration:1.7, v:TARGET, ease:"power2.out",
+        onUpdate: () => numEl.textContent = Math.round(count.v).toLocaleString("en-US") }, "-=.2")
+    .to(".label",  { duration:.6, opacity:1, y:0, ease:"power3.out" }, "-=.4")
+    .to(".source", { duration:.5, opacity:1, ease:"power2.out" }, "-=.2");
+
+  gsap.to(".motif", { duration:9, scale:1.06, yoyo:true, repeat:-1, ease:"sine.inOut" });
+
+  // underline sweep after the number lands
+  const sweep = document.createElement("div");
+  sweep.style.cssText = "position:absolute;left:50%;bottom:0;height:6px;width:0;background:var(--accent2);transform:translateX(-50%)";
+  document.querySelector(".stat-line").appendChild(sweep);
+  gsap.to(sweep, { width:"70%", duration:.7, delay:2.2, ease:"power2.inOut" });
+</script>
+</body>
+</html>

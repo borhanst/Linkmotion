@@ -45,9 +45,13 @@ python -m tools.tool_registry
 | `youtube_source` | `youtube_source` | YouTube oEmbed + auto-generated transcript (keyless) for transcript-sourced stories |
 | `browser_capture` | `browser_capture` | Playwright screen recording of real pages |
 | `broll` | `broll` | Web image/video search, social-post capture, demo clips, user files |
-| `tts` | `tts` | edge-tts narration (male voice, word-level timestamps) |
+| `tts` | `tts` | edge-tts narration (male voice, true per-word timestamps via WordBoundary) |
+| `sfx` | `sfx` | Beat-boundary SFX synth/mix under narration (ffmpeg, CC0 assets) |
 | `video_compose` | `video_compose` | Remotion render |
+| `video_compose` | `html_render` | Frame-stepped deterministic Playwright render of HTML/GSAP pages |
 | `metadata` | `metadata` | Titles / description / tags / thumbnail |
+
+Libs: `lib/captions.py` burns word-timed 1-2-word caption chunks into beat HTML (GSAP-driven, rendered by the frames mode).
 
 ## Core Skills
 
@@ -55,7 +59,8 @@ python -m tools.tool_registry
 |-------|------|---------|----------------------|
 | Remotion | `core/remotion.md` | React-based composition | `remotion-best-practices`, `remotion` |
 | HyperFrames | `core/hyperframes.md` | HTML-based composition (alternative engine) | `hyperframes`, `hyperframes-html-authoring` |
-| HTML Render | `core/html-render.md` | Playwright recording of HTML/GSAP pages | `web-explainer-video` |
+| HTML Render | `core/html-render.md` | Frame-stepped deterministic render (GSAP seek + screenshots; record fallback) | `web-explainer-video` |
+| Style DNA Engine | `core/style-engine.md` | Per-video unique style generation (mandatory before compose) | - |
 
 ## Engine selection
 

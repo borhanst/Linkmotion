@@ -112,4 +112,6 @@ Preview each beat before the next.
 
 ## HTML renderer (default)
 
-Default engine is now plain HTML + GSAP/Anime.js recorded via Playwright (`tools/html_render.py`). See `skills/core/html-render.md`. Lower thirds: `components/html/lower-third.html`. Page transitions: `components/html/page-transition.html`.
+Default engine is now plain HTML + GSAP/Anime.js rendered via Playwright (`tools/html_render.py`). See `skills/core/html-render.md`. Lower thirds: `components/html/lower-third.html`. Page transitions: `components/html/page-transition.html`.
+
+Render `mode="auto"` (default) uses **frame-stepped deterministic rendering**: the page's GSAP timeline is seeked to exact frame times and screenshotted per frame, so output is frame-accurate and reproducible. Captions: burn word-timed 1-2-word chunks with `lib/captions.py` before rendering. Optional beat-boundary SFX: `tools/sfx.py` (synth + mix under narration).

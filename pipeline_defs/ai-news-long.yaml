@@ -165,7 +165,7 @@ stages:
     review_focus:
       - Output exists and plays
       - "Duration >= 480s"
-      - Captions word-synced
+      - "Captions only when the user explicitly requested them; word-synced when present"
       - 16:9 framing, chapter transitions per motion system
     success_criteria:
       - render_report valid

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!-- KIT: chart-bars | 4 bars grow to data heights, winner highlighted -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chart Bars</title>
+<link rel="stylesheet" href="../../style/tokens.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  .stage { position:relative; z-index:1; width:100%; height:100%;
+           display:flex; flex-direction:column; justify-content:center; padding:0 100px; }
+  .kicker { font-size:28px; letter-spacing:.26em; text-transform:uppercase;
+            color:var(--accent2); font-weight:700; margin-bottom:70px; opacity:0; }
+  .chart { display:flex; gap:38px; align-items:flex-end; height:520px; }
+  .bar-item { flex:1; display:flex; flex-direction:column; justify-content:flex-end; height:100%; }
+  .bar { width:100%; border-radius:14px 14px 0 0; background:var(--accent2); opacity:.38;
+         height:0; }
+  .bar.win { background:var(--accent); opacity:1; }
+  .bar-val { font-family:var(--font-display); font-size:34px; font-weight:800;
+             text-align:center; margin-bottom:14px; opacity:0; }
+  .axis { margin-top:24px; border-top:2px solid color-mix(in srgb, var(--text) 22%, transparent);
+          padding-top:18px; display:flex; gap:38px; }
+  .axis span { flex:1; text-align:center; font-size:24px; color:var(--muted); }
+</style>
+</head>
+<body>
+  <div class="motif"></div>
+  <div class="stage">
+    <!-- CONTENT START -->
+    <div class="kicker">BENCHMARK</div>
+    <div class="chart">
+      <div class="bar-item"><div class="bar-val">41</div><div class="bar" data-h="55%"></div></div>
+      <div class="bar-item"><div class="bar-val">58</div><div class="bar" data-h="72%"></div></div>
+      <div class="bar-item"><div class="bar-val">84</div><div class="bar win" data-h="100%"></div></div>
+      <div class="bar-item"><div class="bar-val">35</div><div class="bar" data-h="44%"></div></div>
+    </div>
+    <div class="axis"><span>A</span><span>B</span><span>C · winner</span><span>D</span></div>
+    <!-- CONTENT END -->
+  </div>
+<script>
+  const EASE = "back.out(1.7)";
+  const tl = gsap.timeline();
+  tl.from(".kicker", { duration:.5, opacity:0, y:24, ease:EASE })
+    .to(".bar", { duration:.85, height:(i, el) => el.dataset.h, stagger:.14, ease:"power3.out" })
+    .to(".bar-val", { duration:.4, opacity:1, stagger:.12, ease:"power2.out" }, "-=.7");
+
+  gsap.to(".motif", { duration:9, scale:1.06, yoyo:true, repeat:-1, ease:"sine.inOut" });
+</script>
+</body>
+</html>
