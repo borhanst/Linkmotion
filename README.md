@@ -1,10 +1,10 @@
-# AI News Agent
+# Linkmotion
 
-AI News Agent is an opinionated, instruction-driven workflow for producing short-form and long-form AI news videos from a brief, URL, or topic. Instead of hard-coding a single pipeline, it gives an AI coding assistant a project structure, pipeline manifests, review checks, and tool registry so it can research, script, render, and checkpoint work end-to-end.
+Linkmotion is an opinionated, instruction-driven workflow for producing short-form and long-form AI videos from a brief, URL, or topic. Instead of hard-coding a single pipeline, it gives an AI coding assistant a project structure, pipeline manifests, review checks, and tool registry so it can research, script, render, and checkpoint work end-to-end.
 
 This repo is designed for:
 
-- AI news shorts and explainers
+- AI shorts and explainers
 - model release explainers
 - YouTube-style AI storytelling videos
 - pipeline-driven production with human approval loops
@@ -20,6 +20,8 @@ The repo does not try to replace the agent. It gives the agent:
 - checkpointing for resumable work
 
 In other words: your AI assistant becomes an orchestrator for a video production pipeline.
+
+Check out the workflow in action: ▶️ **[@therefactorengine](https://www.youtube.com/@therefactorengine)**
 
 ## What this repo contains
 
@@ -101,13 +103,13 @@ You can inspect the pipeline config directly in `pipeline_defs/*.yaml` to see st
 
 ## Example video
 
-Here's a short produced end-to-end with this workflow:
+Here's a full breakdown video produced with the `model-release` pipeline:
 
-📺 **[AI news short — watch on YouTube](https://youtu.be/o-__tKpOhsU)**
+📺 **[Meituan's LongCat-2.5: This 1.6T AI Agent Beats GPT-5.5 — Full Breakdown](https://youtu.be/o-__tKpOhsU)**
 
 ## YouTube channel
 
-More videos produced with this pipeline are on my channel:
+More videos produced with this pipeline are on the channel:
 
 ▶️ **[@therefactorengine](https://www.youtube.com/@therefactorengine)**
 
@@ -239,7 +241,7 @@ make lint
 
 ## Typical usage examples
 
-Short AI news video:
+Short AI video:
 
 ```bash
 python -m ai_news_agent init gpt5-launch ai-news-short "GPT-5 launch coverage"
