@@ -49,7 +49,7 @@ Clone and set up the environment:
 
 ```bash
 git clone <repo-url>
-cd youtube-video-skill
+cd linkmotion
 make setup
 ```
 
@@ -98,6 +98,18 @@ The repo ships with several video production pipelines:
 | `model-release` | `pipeline_defs/model-release.yaml` | model / LLM release explainers |
 
 You can inspect the pipeline config directly in `pipeline_defs/*.yaml` to see stages and requirements.
+
+## Example video
+
+Here's a short produced end-to-end with this workflow:
+
+📺 **[AI news short — watch on YouTube](https://youtu.be/o-__tKpOhsU)**
+
+## YouTube channel
+
+More videos produced with this pipeline are on my channel:
+
+▶️ **[@therefactorengine](https://www.youtube.com/@therefactorengine)**
 
 ## Standard workflow
 
