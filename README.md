@@ -1,5 +1,9 @@
 # Linkmotion
 
+📺 **Example video:** [Meituan's LongCat-2.5: This 1.6T AI Agent Beats GPT-5.5 — Full Breakdown](https://youtu.be/o-__tKpOhsU) — produced end-to-end with the `model-release` pipeline from this repo.
+
+▶️ More videos like this: **[@therefactorengine](https://www.youtube.com/@therefactorengine)**
+
 Linkmotion is an opinionated, instruction-driven workflow for producing short-form and long-form AI videos from a brief, URL, or topic. Instead of hard-coding a single pipeline, it gives an AI coding assistant a project structure, pipeline manifests, review checks, and tool registry so it can research, script, render, and checkpoint work end-to-end.
 
 This repo is designed for:
@@ -20,8 +24,6 @@ The repo does not try to replace the agent. It gives the agent:
 - checkpointing for resumable work
 
 In other words: your AI assistant becomes an orchestrator for a video production pipeline.
-
-Check out the workflow in action: ▶️ **[@therefactorengine](https://www.youtube.com/@therefactorengine)**
 
 ## What this repo contains
 
@@ -100,18 +102,6 @@ The repo ships with several video production pipelines:
 | `model-release` | `pipeline_defs/model-release.yaml` | model / LLM release explainers |
 
 You can inspect the pipeline config directly in `pipeline_defs/*.yaml` to see stages and requirements.
-
-## Example video
-
-Here's a full breakdown video produced with the `model-release` pipeline:
-
-📺 **[Meituan's LongCat-2.5: This 1.6T AI Agent Beats GPT-5.5 — Full Breakdown](https://youtu.be/o-__tKpOhsU)**
-
-## YouTube channel
-
-More videos produced with this pipeline are on the channel:
-
-▶️ **[@therefactorengine](https://www.youtube.com/@therefactorengine)**
 
 ## Standard workflow
 
