@@ -5,7 +5,7 @@ best_for: [ai-news-long, long-form-roundups, model-first-looks, model-release]
 
 reference:
   channel: "@intheworldofai (YouTube)"
-  frames_dir: "styles/worldofai-signal/frames/"
+  frames_dir: "inspiration/borhan/worldofai-signal-cards/frames/"
   deconstruction: "styles/worldofai-signal.reference.md"
   full_profile: "inspiration/worldofai-channel-profile.md"
 

@@ -9,7 +9,7 @@
 > Sampled from 5 shorts (802K / 414K / 43K / 45K / newest 13K views), Nov 2026.
 > ~29 sampled frames across 2 videos confirmed zero layout violations.
 
-## Frames (in `frames/`)
+## Frames (in `inspiration/borhan/insiderforce-ceramic-diagram/frames/`)
 
 | File | Shows |
 |---|---|

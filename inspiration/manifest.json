@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-09T19:49:07Z",
+  "updated": "2026-11-09T20:08:11Z",
   "purpose": "Inspiration bank manifest (git-ignored). READ THIS FIRST, pick by need (ratio / type / tags / best_for), then open the entry's `profile` and study the TECHNIQUE only - never copy wording. Query programmatically via lib.inspiration.load_for().",
   "count": 2,
   "inspirations": [
@@ -33,7 +33,7 @@
       ],
       "profile": "styles/insider-force-ceramic.reference.md",
       "analysis": null,
-      "frames": "styles/insider-force-ceramic/frames",
+      "frames": "inspiration/borhan/insiderforce-ceramic-diagram/frames",
       "notes": "User-approved reference. Layout grammar + blur-in motion fixed; accent hue varies per video. Sampled: 5 shorts (802K/414K/43K/45K/13K views), Nov 2026.",
       "created": "2026-11-09T19:38:48Z"
     },
@@ -67,7 +67,7 @@
       ],
       "profile": "inspiration/worldofai-channel-profile.md",
       "analysis": null,
-      "frames": "styles/worldofai-signal/frames",
+      "frames": "inspiration/borhan/worldofai-signal-cards/frames",
       "notes": "Full channel deconstruction (structure + tone + visual system + thumbnails). Built 2026-11-10 from channel analysis + transcript pulls + frame sampling. Pair narration with skills/creative/narration-tone.md.",
       "created": "2026-11-09T19:39:00Z"
     }

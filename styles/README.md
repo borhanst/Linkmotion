@@ -24,7 +24,7 @@ Best for: investor updates, expert explainers, product narratives.
 Category: ceramic-diagram. Mood: clean, engineered, AI-premium.
 Best for: AI news shorts, tool breakdowns, list formats.
 User-approved reference style deconstructed from @InsiderForce (YouTube).
-See `insider-force-ceramic.reference.md` + `insider-force-ceramic/frames/`
+See `insider-force-ceramic.reference.md` + `inspiration/borhan/insiderforce-ceramic-diagram/frames/`
 (six sampled reference frames). Layout grammar + blur-in motion stay fixed
 per user request; accent hue varies per video for uniqueness-ledger.
 
@@ -32,7 +32,7 @@ per user request; accent hue varies per video for uniqueness-ledger.
 Category: signal-card. Mood: dark, glowing, energetic AI-newsroom hype.
 Best for: ai-news-long, long-form roundups, model first-looks.
 Reference style deconstructed from @intheworldofai (YouTube) on user request.
-See `worldofai-signal.reference.md` + `worldofai-signal/frames/` and the full
+See `worldofai-signal.reference.md` + `inspiration/borhan/worldofai-signal-cards/frames/` and the full
 channel profile in `inspiration/worldofai-channel-profile.md`.
 Fixed identity: dark stage + dark evidence cards with red-box highlights,
 brand-color-coded accents, labeled B-roll, fast open. Gradient hue pairing and
