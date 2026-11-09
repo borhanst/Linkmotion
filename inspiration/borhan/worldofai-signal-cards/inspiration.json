@@ -1,0 +1,33 @@
+{
+  "slug": "worldofai-signal-cards",
+  "owner": "borhan",
+  "name": "WorldofAI signal cards",
+  "source": {
+    "kind": "channel",
+    "ref": "youtube.com/@intheworldofai",
+    "analyzed_at": "2026-11-09T19:39:00Z"
+  },
+  "ratio": "16:9",
+  "type": "full",
+  "tags": [
+    "dark-stage",
+    "evidence-cards",
+    "red-box-highlights",
+    "news-roundup",
+    "broll-labels",
+    "creator-voice",
+    "thumbnails"
+  ],
+  "best_for": [
+    "ai-news-long",
+    "long",
+    "model-release"
+  ],
+  "linked_playbooks": [
+    "worldofai-signal"
+  ],
+  "notes": "Full channel deconstruction (structure + tone + visual system + thumbnails). Built 2026-11-10 from channel analysis + transcript pulls + frame sampling. Pair narration with skills/creative/narration-tone.md.",
+  "created": "2026-11-09T19:39:00Z",
+  "profile_file": "inspiration/worldofai-channel-profile.md",
+  "frames_dir": "styles/worldofai-signal/frames"
+}

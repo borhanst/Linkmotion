@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "updated": "2026-11-09T19:49:07Z",
+  "purpose": "Inspiration bank manifest (git-ignored). READ THIS FIRST, pick by need (ratio / type / tags / best_for), then open the entry's `profile` and study the TECHNIQUE only - never copy wording. Query programmatically via lib.inspiration.load_for().",
+  "count": 2,
+  "inspirations": [
+    {
+      "owner": "borhan",
+      "slug": "insiderforce-ceramic-diagram",
+      "name": "InsiderForce ceramic diagram",
+      "source": {
+        "kind": "channel",
+        "ref": "youtube.com/@insiderforce",
+        "analyzed_at": "2026-11-09T19:38:48Z"
+      },
+      "ratio": "9:16",
+      "type": "visual",
+      "tags": [
+        "flat-bg",
+        "hero-visual",
+        "countdown",
+        "typographic",
+        "hub-diagram",
+        "shorts"
+      ],
+      "best_for": [
+        "ai-news-short",
+        "model-release",
+        "short"
+      ],
+      "linked_playbooks": [
+        "insider-force-ceramic"
+      ],
+      "profile": "styles/insider-force-ceramic.reference.md",
+      "analysis": null,
+      "frames": "styles/insider-force-ceramic/frames",
+      "notes": "User-approved reference. Layout grammar + blur-in motion fixed; accent hue varies per video. Sampled: 5 shorts (802K/414K/43K/45K/13K views), Nov 2026.",
+      "created": "2026-11-09T19:38:48Z"
+    },
+    {
+      "owner": "borhan",
+      "slug": "worldofai-signal-cards",
+      "name": "WorldofAI signal cards",
+      "source": {
+        "kind": "channel",
+        "ref": "youtube.com/@intheworldofai",
+        "analyzed_at": "2026-11-09T19:39:00Z"
+      },
+      "ratio": "16:9",
+      "type": "full",
+      "tags": [
+        "dark-stage",
+        "evidence-cards",
+        "red-box-highlights",
+        "news-roundup",
+        "broll-labels",
+        "creator-voice",
+        "thumbnails"
+      ],
+      "best_for": [
+        "ai-news-long",
+        "long",
+        "model-release"
+      ],
+      "linked_playbooks": [
+        "worldofai-signal"
+      ],
+      "profile": "inspiration/worldofai-channel-profile.md",
+      "analysis": null,
+      "frames": "styles/worldofai-signal/frames",
+      "notes": "Full channel deconstruction (structure + tone + visual system + thumbnails). Built 2026-11-10 from channel analysis + transcript pulls + frame sampling. Pair narration with skills/creative/narration-tone.md.",
+      "created": "2026-11-09T19:39:00Z"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "slug": "insiderforce-ceramic-diagram",
+  "owner": "borhan",
+  "name": "InsiderForce ceramic diagram",
+  "source": {
+    "kind": "channel",
+    "ref": "youtube.com/@insiderforce",
+    "analyzed_at": "2026-11-09T19:38:48Z"
+  },
+  "ratio": "9:16",
+  "type": "visual",
+  "tags": [
+    "flat-bg",
+    "hero-visual",
+    "countdown",
+    "typographic",
+    "hub-diagram",
+    "shorts"
+  ],
+  "best_for": [
+    "ai-news-short",
+    "model-release",
+    "short"
+  ],
+  "linked_playbooks": [
+    "insider-force-ceramic"
+  ],
+  "notes": "User-approved reference. Layout grammar + blur-in motion fixed; accent hue varies per video. Sampled: 5 shorts (802K/414K/43K/45K/13K views), Nov 2026.",
+  "created": "2026-11-09T19:38:48Z",
+  "profile_file": "styles/insider-force-ceramic.reference.md",
+  "frames_dir": "styles/insider-force-ceramic/frames"
+}
