@@ -1,8 +1,0 @@
-1
-00:00:00,100 --> 00:00:02,250
-Trends move fast.
-
-2
-00:00:02,200 --> 00:00:07,412
-A repo hot today might be quiet next week, so check the star count before you commit.
-

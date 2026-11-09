@@ -1,0 +1,63 @@
+name: worldofai-signal
+category: signal-card
+mood: dark, glowing, energetic AI-newsroom hype
+best_for: [ai-news-long, long-form-roundups, model-first-looks, model-release]
+
+reference:
+  channel: "@intheworldofai (YouTube)"
+  frames_dir: "styles/worldofai-signal/frames/"
+  deconstruction: "styles/worldofai-signal.reference.md"
+  full_profile: "inspiration/worldofai-channel-profile.md"
+
+typography:
+  display_face: "Inter (Google Fonts CDN)"
+  ui_face: "Inter"
+  display_weight: 800   # bold-glow headline treatment
+  ui_weight: 400
+  case: mixed          # CAPS reserved for subject labels + card headers
+  track_kicker: "0.02em"
+  line_height: 1.2
+  tabular_numerals: true
+
+palette:
+  background: "#0B0E14"               # near-black stage
+  surface: "#12151B"                  # dark evidence card (radius 12px, hairline border)
+  surface_alt: "#0E1116"              # terminal/config card
+  primary_text: "#F5F7FA"
+  secondary_text: "#8A94A6"
+  primary: "#3B82F6"                  # channel-level blue (link/bell CTAs)
+  secondary: "#8B5CF6"
+  accent: "per-company"               # KEY RULE: card accent = story company brand color
+  accent_examples: {openai: "#10A37F", anthropic: "#D97757", google: "#4285F4", alibaba: "#7C3AED", x_post: "#8A94A6"}
+  highlight: "#E5484D"                # red-box annotation on the key line/metric
+  diff_add: "#3FB950"
+  diff_remove: "#F85149"
+  bg_gradient: ["#06232F", "#2E120A"] # teal->ember atmosphere behind cards (soft, blurred)
+
+motion:
+  default_easing: "power3.out"
+  signature_move: "card-reveal: dark card fades+rises in (y+18px, blur 8->0, 0.5s) on gradient stage"
+  secondary_moves:
+    - "highlight-rectangle: red box scales onto the key line 0.4s after card lands, then subtle pulse (opacity 1 -> 0.85)"
+    - "zoom-punch: camera 1 -> 1.15 punch-in on the annotated region"
+    - "pa: continuous soft gradient drift on stage background (sine.inOut)"
+    - "broll: full-screen footage with bold white subject label bottom-left fading in last"
+  camera_push: "1 -> 1.03 across the scene"
+  parallax: {background: "0.4%", foreground: "1.5%"}
+  beat_cadence_sec: "15-35 (evidence card beats inside 2-4 min story blocks)"
+
+audio:
+  narration_primary: true
+  music_bed: "dark synth bed, low (-20dB under VO), drops out ~1s at each story boundary"
+  sfx: ["soft whoosh on card-reveal", "subtle tick on highlight-pulse", "boundary riser at story transitions"]
+  tone_note: "energetic VO, first person, direct address - see skills/creative/narration-tone.md"
+
+quality:
+  grain: "2-3% procedural"
+  vignette: true
+  color_grade: "dark cinematic, brand-accent glow spilling onto stage from card edges"
+  soft_offset_shadows: true
+  watermark: "source attribution INSIDE every recreated card (bottom line: 'source: @handle / outlet · date', muted gray)"
+  broll_credit: "bold creator @handle top-right on all external footage"
+  open_fast: "first evidence card visible within 5-6s of runtime - NO logo intro"
+  captions: "burned word-timed captions via lib/captions.py (our differentiator vs reference channel)"

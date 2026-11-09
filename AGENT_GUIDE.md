@@ -22,6 +22,7 @@ its skill first.
 | "Make a video from this blog / article / URL" | Same 3 pipelines by length. Research normalizes ANY source: `web_search.fetch` the URL, extract claims, verify with corroborating search. The user requirement is that **every video has a unique style** - see `skills/core/style-engine.md`. |
 | "Make a video about <topic>" (no URL) | Same pipelines. Research builds the source base from `web_search` + `broll`. |
 | "Help me fix / review / debug the codebase" | Treat as engineering task, not a production run. |
+| "Create an inspiration from this video / channel / clip / description" | Follow `skills/core/inspiration.md`: analyze the source, deconstruct it, register the inspiration(s). Never a production run. |
 | "Add a tool / skill / pipeline" | Treat as engineering task. See `skills/INDEX.md` for conventions. |
 
 ## Pipeline selection
@@ -45,7 +46,9 @@ Slug: kebab-case, e.g. `2026-10-gpt5-launch-short`.
 2. Run preflight.
 3. For **each stage** in order, read
    `skills/pipelines/<pipeline>/<stage>-director.md` **BEFORE** doing work.
-4. At the **proposal** stage, generate the video's unique style via
+4. At the **proposal** stage, load matching inspirations via
+   `lib.inspiration.load_for(best_for=<pipeline>, ratio=...)` (see
+   `skills/core/inspiration.md`), then generate the video's unique style via
    `lib/style_engine.ensure_style()` (see `skills/core/style-engine.md`) and
    show the rendered style card for approval with the proposal.
 5. After each stage, run `skills/meta/reviewer.md` and write
@@ -65,6 +68,7 @@ Slug: kebab-case, e.g. `2026-10-gpt5-launch-short`.
 | Checkpoint protocol | `skills/meta/checkpoint-protocol.md` |
 | Tool registry | `tools/tool_registry.py` (query at runtime) |
 | Skill index | `skills/INDEX.md` |
+| Inspiration bank | `skills/core/inspiration.md` (list file: `inspiration/manifest.json`) |
 
 ## Golden rules
 

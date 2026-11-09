@@ -36,6 +36,9 @@ observation that most people watching will never come back:
   expensive to re-record.
 - Enhancement cue density: 1 per 8-10 seconds.
 - Open loops at section boundaries - tease a payoff a beat before delivering it.
+- **Tone:** write the narration against `skills/creative/narration-tone.md`
+  (energetic first-person VO + 4-slot subscribe-ask + outro ritual; wording
+  must be ours - originality check applies).
 
 ## Output
 

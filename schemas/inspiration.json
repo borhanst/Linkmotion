@@ -1,0 +1,30 @@
+{
+  "$id": "https://ai-news-agent/schemas/inspiration.json",
+  "type": "object",
+  "required": ["slug", "owner", "name", "source", "type"],
+  "properties": {
+    "slug": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+    "owner": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "source": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {"type": "string", "enum": ["video", "channel", "raw", "description"]},
+        "ref": {"type": "string"},
+        "analyzed_at": {"type": "string"}
+      }
+    },
+    "ratio": {"type": "string", "enum": ["9:16", "16:9", "1:1", "4:5", "auto"]},
+    "type": {"type": "string", "enum": ["full", "structure", "visual", "pacing", "hooks", "thumbnail", "tone"]},
+    "tags": {"type": "array", "items": {"type": "string"}},
+    "best_for": {"type": "array", "items": {"type": "string"}},
+    "linked_playbooks": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"},
+    "created": {"type": "string"},
+    "profile_file": {"type": "string"},
+    "analysis_file": {"type": "string"},
+    "frames_dir": {"type": "string"}
+  },
+  "additionalProperties": true
+}

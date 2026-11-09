@@ -4,6 +4,7 @@ Commands:
     preflight    - verify the tool registry + external render dependencies
     pipelines    - list available pipeline manifests from pipeline_defs/
     init         - scaffold projects/<slug>/ for a new video production
+    inspiration  - manage the inspiration library (list/show/create/analyze)
 
 Run with no arguments for usage help.
 """
@@ -134,6 +135,10 @@ def main(argv: list[str] | None = None) -> int:
     p_init.add_argument("topic", help="topic / story / brief for the video")
     p_init.add_argument("source_url", nargs="?", default="", help="optional source URL (YouTube, blog, article)")
 
+    p_insp = sub.add_parser("inspiration", help="inspiration library (list/show/create/analyze)")
+    p_insp.add_argument("insp_args", nargs=argparse.REMAINDER,
+                        help="args forwarded to the inspiration CLI, e.g. list --ratio 9:16")
+
     args = parser.parse_args(argv)
     if args.command == "preflight":
         return preflight()
@@ -141,6 +146,9 @@ def main(argv: list[str] | None = None) -> int:
         return pipelines()
     if args.command == "init":
         return init(args.slug, args.pipeline, args.topic, args.source_url)
+    if args.command == "inspiration":
+        from lib.inspiration import main as inspiration_main
+        return inspiration_main(args.insp_args or ["list"])
     parser.print_help()
     return 0
 

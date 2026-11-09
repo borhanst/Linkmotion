@@ -28,6 +28,12 @@ def styles_dir() -> Path:
     return ROOT / "styles"
 
 
+def inspiration_dir(owner: str | None = None) -> Path:
+    """Git-ignored inspiration bank root (or one user's bench)."""
+    base = styles_dir() / "inspiration"
+    return base / owner if owner else base
+
+
 def schemas_dir() -> Path:
     return ROOT / "schemas"
 

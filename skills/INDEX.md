@@ -61,6 +61,7 @@ Libs: `lib/captions.py` burns word-timed 1-2-word caption chunks into beat HTML 
 | HyperFrames | `core/hyperframes.md` | HTML-based composition (alternative engine) | `hyperframes`, `hyperframes-html-authoring` |
 | HTML Render | `core/html-render.md` | Frame-stepped deterministic render (GSAP seek + screenshots; record fallback) | `web-explainer-video` |
 | Style DNA Engine | `core/style-engine.md` | Per-video unique style generation (mandatory before compose) | - |
+| Inspiration Library | `core/inspiration.md` | Deconstructed reference bank: create from video/channel/raw video/description, load by need | - |
 
 ## Engine selection
 
@@ -83,6 +84,7 @@ any beat better expressed as HTML/CSS.
 | Skill | File | Trigger |
 |-------|------|---------|
 | Storytelling | `creative/storytelling.md` | Narrative structure, hooks, pacing |
+| Narration Tone | `creative/narration-tone.md` | Energetic VO tone spec (WorldofAI-inspired), subscribe-ask formula, self-check |
 | B-Roll Planning | `creative/broll-planning.md` | Supplementary footage sourcing from web/social/user files |\n| Lower Thirds | `creative/lower-thirds.md` | Reusable GSAP lower-third overlay |\n| Page Transitions | `creative/page-transitions.md` | Reusable GSAP page-transition treatment |
 
 ## Pipeline Type Skills
@@ -111,6 +113,19 @@ audio, and asset constraints. Load via `lib/playbook_loader.py`.
 | `clean-professional` | motion-graphics | polished, trustworthy | Corporate, educational, SaaS |
 | `flat-motion-graphics` | motion-graphics | energetic, bold | Social media, TikTok, startups |
 | `minimalist-diagram` | whiteboard | focused, technical | Technical deep-dives, architecture |
+
+## Inspiration Library
+
+`inspiration/` (standalone root folder) is the (git-ignored, per-user) bank of
+deconstructed references that feeds style work. Its `manifest.json` list file
+is read first; each entry: a record + profile.md + optional analysis/frames.
+Sources: a video link, a channel link, a raw local video, or
+a plain description; one analysis can yield several inspirations of different
+type (structure / visual / pacing / hooks / thumbnail / tone) and ratio
+(9:16 / 16:9 / 1:1). Load what a stage needs via `lib.inspiration.load_for()`
+- see `skills/core/inspiration.md`. The two existing inspirations already
+power `insider-force-ceramic` (short, 9:16) and `worldofai-signal`
+(long, 16:9).
 
 ## Adding New Tools
 

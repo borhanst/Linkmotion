@@ -132,16 +132,22 @@ def parse_duration(text: str) -> int:
 
 
 def parse_relative_ago(text: str) -> float:
-    """"3 weeks ago" -> approx days (0.0 if unparseable)."""
-    m = re.search(r"(\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago", text)
+    """"3 weeks ago" / "11h ago" -> approx days (0.0 if unparseable)."""
+    m = re.search(
+        r"(\d+)\s*"
+        r"(seconds?|secs?|minutes?|mins?|hours?|hrs?|days?|weeks?|months?|years?|"
+        r"s|m|h|d|w)\s+ago", text, re.I)
     if not m:
         return 0.0
     n = int(m.group(1))
+    unit = m.group(2).lower()[0] if len(m.group(2)) <= 1 else m.group(2).lower()
     unit_days = {
-        "second": 1 / 86400, "minute": 1 / 1440, "hour": 1 / 24,
-        "day": 1, "week": 7, "month": 30.44, "year": 365.25,
+        "s": 1 / 86400, "m": 1 / 1440, "h": 1 / 24, "d": 1, "w": 7, "y": 365.25,
+        "second": 1 / 86400, "sec": 1 / 86400, "minute": 1 / 1440, "min": 1 / 1440,
+        "hour": 1 / 24, "hr": 1 / 24, "day": 1, "week": 7, "month": 30.44,
+        "year": 365.25,
     }
-    return n * unit_days[m.group(2)]
+    return n * unit_days.get(unit, 0.0)
 
 
 def parse_compact_number(text: str) -> int:
@@ -568,13 +574,70 @@ def _like_count_from_html(html: str) -> str:
     return m.group(1).replace("\\u0026", "&") if m else ""
 
 
+def _channel_video_from_lockup(lockup: dict[str, Any]) -> ChannelVideo | None:
+    """Parse a new-layout `lockupViewModel` item into a ChannelVideo.
+
+    YouTube's Videos tab has migrated from `videoRenderer` to this view model;
+    both are supported so the tool keeps working during the transition.
+    """
+    vid = lockup.get("contentId", "")
+    # watch-page long forms are exactly 11 chars; guard against playlists/other ids
+    if not re.fullmatch(r"[A-Za-z0-9_-]{11}", vid or ""):
+        return None
+    meta_vm: Any = (_find_key(lockup, "lockupMetadataViewModel") or {})
+    title = (meta_vm.get("title") or {}).get("content", "") if isinstance(meta_vm, dict) else ""
+
+    published_text, views_text = "", ""
+    rows: Any = _find_key(meta_vm, "metadataRows") or []
+    for row in rows if isinstance(rows, list) else []:
+        for part in (row.get("metadataParts") or []):
+            text = (part.get("text") or {}).get("content", "")
+            icon = ((part.get("leadingIcon") or {}).get("name") or "")
+            if "PLAY_ARROW" in icon:
+                views_text = text
+            elif re.search(r"\bago\b", text.lower()):
+                published_text = text
+
+    duration = 0
+    thumb_vm = ((lockup.get("contentImage") or {}).get("thumbnailViewModel")
+                or _find_key(lockup, "thumbnailViewModel"))
+    for overlay in ((thumb_vm or {}).get("overlays") or []):
+        for badge in ((overlay.get("thumbnailBottomOverlayViewModel") or {}).get("badges") or []):
+            dur_text = (badge.get("thumbnailBadgeViewModel") or {}).get("text", "")
+            if re.fullmatch(r"[\d:]+", dur_text or ""):
+                duration = parse_duration(dur_text)
+
+    thumbs = ((thumb_vm or {}).get("image") or {}).get("sources") or []
+    best = max(thumbs, key=lambda t: t.get("width", 0)) if thumbs else None
+
+    cv = ChannelVideo(
+        video_id=vid,
+        title=title,
+        duration_sec=duration,
+        published_ago_days=parse_relative_ago(published_text) if published_text else 0.0,
+        published_text=published_text,
+        views=parse_compact_number(views_text) if views_text else 0,
+        views_text=views_text,
+        thumbnail=best.get("url", "") if best else "",
+    )
+    cv.url = f"https://www.youtube.com/watch?v={vid}"
+    return cv
+
+
 def _grid_videos(meta: dict[str, Any], cap: int) -> list[ChannelVideo]:
-    """Walk the Videos tab grid for videoRenderer items."""
+    """Walk the Videos tab grid for video items (current + legacy layouts)."""
     seen: list[str] = []
     videos: list[ChannelVideo] = []
 
     def visit(node: Any) -> None:
         if isinstance(node, dict):
+            lockup = node.get("lockupViewModel")
+            if isinstance(lockup, dict):
+                cv = _channel_video_from_lockup(lockup)
+                if cv and cv.video_id not in seen:
+                    seen.append(cv.video_id)
+                    videos.append(cv)
+                return  # nothing else of value inside a lockup item
             vr: Any = node.get("videoRenderer") or node.get("gridVideoRenderer")
             if not vr:
                 ri = node.get("richItemRenderer")

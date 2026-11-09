@@ -9,7 +9,29 @@ Topic, URL, or vague description from the user.
 ## Tools
 
 - `web_search` (required)
+- `twitter_post` (required, see "Official X posts" below)
 - `youtube_source` (optional, for transcript-sourced stories)
+
+## Official X posts (first-party verification)
+
+Most AI news is announced on X before (or instead of) a blog post. An official
+post from the lab/company account is a **first-party primary source** — its text
+and timestamp are more accurate than any third-party recap. Always research it:
+
+1. **Find the post URL** with `web_search`, e.g. `site:x.com/<lab-handle> <topic>`
+   or `"<topic>" site:x.com` (watch for reposts — prefer the lab's own account,
+   the researcher who authored the work, or the official product account).
+2. **Fetch it** with the `twitter_post` tool:
+   ```bash
+   python -m tools.twitter_post "https://x.com/<author>/status/<id>" --screenshot
+   ```
+   The tool works keyless via oEmbed; with `TWITTER_BEARER_TOKEN` set in `.env`
+   it also returns `created_at`, retweet/like/reply/quote counts.
+3. **Use it as verified data**: quote numbers, dates, and claims from the tweet
+   text exactly as written, and cite the tweet URL for each. The `--screenshot`
+   PNG (official embed widget) doubles as an on-screen proof visual.
+4. Cross-check the tweet against the blog post / model card. If they disagree,
+   the more primary page wins and you record the discrepancy in research notes.
 
 ## Transcript-sourced stories
 
@@ -32,12 +54,15 @@ as context - NOT to copy:
 ## Process
 
 1. **Pick a primary source.** For AI news / model releases: the lab's blog post,
-   model card, pricing/docs page, or arXiv/HF page. Never narrate a number,
+   model card, pricing/docs page, official X announcement post, or arXiv/HF page.
+   Never narrate a number,
    date, benchmark, or price you did not see on a page you are about to show.
-2. **Find 2-3 corroborating sources.** Credible third-party coverage.
-3. **Record the publication date.** Say it in the video ("announced October 2026").
-4. **Extract the core claim.** One sentence the whole Short hangs on.
-5. **Note the visual needs.** What pages, tables, code, or screenshots must we
+2. **Fetch the official X post** (see "Official X posts" above) and treat its
+   text + timestamp as first-party evidence.
+3. **Find 2-3 corroborating sources.** Credible third-party coverage.
+4. **Record the publication date.** Say it in the video ("announced October 2026").
+5. **Extract the core claim.** One sentence the whole Short hangs on.
+6. **Note the visual needs.** What pages, tables, code, or screenshots must we
    capture?
 
 ## Output: `projects/<slug>/research.md`
@@ -49,6 +74,13 @@ as context - NOT to copy:
 - URL:
 - Title:
 - Publication date:
+
+## Official X post
+- URL: <x.com/<author>/status/<id>, or "not found">
+- Author/handle:
+- Publication date: <created_at from twitter_post, or "unknown">
+- Engagement: <retweets/likes/quotes if TWITTER_BEARER_TOKEN set>
+- Screenshot: <out/twitter_posts/... .png path from --screenshot, or "not captured">
 
 ## Core claim
 <one sentence>
@@ -64,12 +96,15 @@ as context - NOT to copy:
 ## Visual needs
 - <page to capture>
 - <table to spotlight>
+- Twitter card PNG: <official embed screenshot, doubles as on-screen proof>
 ```
 
 ## Success criteria
 
 - At least 2 cited data points with URLs.
 - `primary_source` set.
+- Official X post fetched and cited (or a research note explaining why none
+  exists for this story — e.g. pre-announcement leaks, no official account).
 
 ## Lessons learned (YouTube-source remakes)
 

@@ -88,6 +88,9 @@ projects/*/renders/
 projects/*/_record/
 projects/*/_concat.txt
 
+# --- Inspiration library (per-user reference bank, never pushed) ---
+/inspiration/
+
 # --- Logs ---
 *.log
 logs/

@@ -1,0 +1,57 @@
+name: insider-force-ceramic
+category: ceramic-diagram
+mood: clean, engineered, AI-premium
+best_for: [ai-news-shorts, tool-breakdowns, list-shorts]
+
+reference:
+  channel: "@InsiderForce (YouTube)"
+  frames_dir: "styles/insider-force-ceramic/frames/"
+  deconstruction: "styles/insider-force-ceramic.reference.md"
+
+typography:
+  display_face: "Helvetica Now Display / Inter (Google Fonts: Inter Tight)"
+  ui_face: "Inter"
+  display_weight: 700
+  ui_weight: 400
+  case: sentence   # never ALL CAPS (tilt-authenticity exception aside)
+  emphasis_pattern: "1-2 anchor words per line in bold #1A1A1A; filler words muted #B7B5B2; max 5 words/line"
+  optional_emphases:
+    - "italic serifless emphasis"
+    - "white-on-black pill (italic) for one hook phrase per video"
+    - "→ bullet marker left of text lines"
+  track_kicker: "0"
+  line_height: 1.15
+  tabular_numerals: true
+
+palette:
+  background: "#F1F0EE"        # flat near-white warm gray, zero texture/gradient
+  surface: "#FFFFFF"           # ceramic cards / tiles / circles
+  primary_text: "#1A1A1A"      # anchor words
+  secondary_text: "#B7B5B2"    # filler words + watermark
+  primary: "#2B2B28"           # matte-black countdown bar / pill bg
+  secondary: "#FFFFFF"
+  accent: "#E2725B"            # coral (brand mascot + starburst + connector lines)
+  bg_gradient: ["#F1F0EE", "#F1F0EE"]   # deliberately flat
+
+motion:
+  default_easing: "power2.out"
+  signature_move: "rack-focus: element enters at blur(14px)+scale(1.04), sharpens to blur(0)+scale(1.0) in 0.7s"
+  secondary_moves:
+    - "icon tiles: slight 3D rotate (±6deg) with soft drop shadow"
+    - "connector lines: draw on via scale flip (origin at hub)"
+    - "typography: per-word rise+unblur, anchor words land last"
+  camera_push: "1 -> 1.02 across the scene"
+  parallax: {background: "0%", foreground: "0.6%"}
+  beat_cadence_sec: "9-11 (one claim per beat)"
+
+audio:
+  narration_primary: true
+  music_bed: "subtle lo-fi electronic, side-chained under VO"
+  sfx: ["soft whoosh on blur-in", "tick on countdown markers"]
+
+quality:
+  grain: "0%"
+  vignette: false
+  color_grade: "high-key, neutral"
+  soft_offset_shadows: true
+  watermark: "insiderforce.io - light gray #C9C7C4, centered, bottom 10%, every beat"
