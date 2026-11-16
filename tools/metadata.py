@@ -24,7 +24,7 @@ class MetadataTool(BaseTool):
     tier = ToolTier.PUBLISH
     runtime = ToolRuntime.LOCAL
     dependencies = ["remotion", "node"]
-    agent_skills = ["remotion-video-common"]
+    agent_skills = ["remotion-video-common", "core/thumbnail-style"]
     input_schema = {
         "type": "object",
         "properties": {

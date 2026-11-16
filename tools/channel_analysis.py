@@ -497,7 +497,11 @@ class ChannelAnalysisTool(BaseTool):
             dl = run([
                 _which("yt-dlp"), "-f", "best[height<=480][vcodec^=avc]/best[height<=480]/best",
                 "--no-playlist", "-o", str(Path(tmp) / "src.mp4"),
-                f"https://www.youtube.com/watch?v={vid}", "--quiet",
+                f"https://www.youtube.com/watch?v={vid}",
+                # Deno/PoToken challenge solvers are unreliable here; the android
+                # client serves a plain progressive 360p file that needs no JS.
+                "--extractor-args", "youtube:player_client=android,web_safari",
+                "--quiet",
             ], timeout=600)
             if not dl["ok"] or not (Path(tmp) / "src.mp4").exists():
                 return {"ok": False, "error": "yt-dlp download failed", "stderr": dl.get("stderr", "")[-500:]}
