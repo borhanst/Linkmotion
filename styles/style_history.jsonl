@@ -7,3 +7,4 @@
 {"slug": "2026-11-linkmotion-self-short", "genes": {"palette": "grape-pop", "typography": "grotesk-modern", "motif": "neo-brutalist", "easing": "bounce-cheer", "caption": "bottom-bar", "transition": "zoom-punch"}, "ts": "2026-11-08T13:43:18Z"}
 {"slug": "2026-11-fable-mythos-52-long", "genes": {"palette": "ember-heat", "typography": "grotesk-modern", "motif": "grid-terminal", "easing": "snappy-pro", "caption": "badge-tag", "transition": "morph-dot"}, "ts": "2026-11-10T05:11:44Z"}
 {"slug": "2026-11-qwen4-max-long", "genes": {"palette": "grape-pop", "typography": "bricolage-mix", "motif": "grid-terminal", "easing": "spring-pop", "caption": "karaoke-highlight", "transition": "morph-dot"}, "ts": "2026-11-16T06:08:10Z"}
+{"slug": "2026-11-agent-overview-16x9", "genes": {"palette": "mint-lab", "typography": "bricolage-mix", "motif": "iso-stacks", "easing": "bounce-cheer", "caption": "karaoke-highlight", "transition": "zoom-punch"}, "ts": "2026-11-16T16:26:46Z"}
