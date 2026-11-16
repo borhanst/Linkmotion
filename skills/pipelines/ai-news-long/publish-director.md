@@ -25,8 +25,12 @@ Generate the full YouTube upload package and mark the video done.
 4. **Write tags** to `projects/<slug>/metadata/tags.json` - mix broad category
    tags, the specific topic phrase, and longer-tail phrases.
 5. **Thumbnail** (long-form: required) - 1280x720, 3-6 words of bold text max,
-   high contrast. Generate 2-3 variants. Reuse an existing icon/image
-   component from this video's own `components/`.
+   high contrast. Generate 2-3 variants. Reuse imagery the project is allowed
+   to show. Load `skills/core/thumbnail-style.md` BEFORE authoring thumbnails;
+   it documents a project-agnostic "Receipts" layout (layer order, palette from
+   the project's own tokens, type sizes, badge, source line), with
+   `thumb-1.png` as a reference example only. It ships a reproducible generator
+   at `skills/core/scripts/make_thumbnail.py`.
 6. **Update `progress.json.stage` to `"done"`**.
 
 ## Output: `projects/<slug>/publish_log.json`

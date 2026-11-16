@@ -62,6 +62,7 @@ Libs: `lib/captions.py` burns word-timed 1-2-word caption chunks into beat HTML 
 | HTML Render | `core/html-render.md` | Frame-stepped deterministic render (GSAP seek + screenshots; record fallback) | `web-explainer-video` |
 | Style DNA Engine | `core/style-engine.md` | Per-video unique style generation (mandatory before compose) | - |
 | Inspiration Library | `core/inspiration.md` | Deconstructed reference bank: create from video/channel/raw video/description, load by need | - |
+| Thumbnail Style | `core/thumbnail-style.md` | Project-agnostic publish-stage YouTube thumbnail design / "how the thumbnail looks"; reusable 1280x720 Receipts layout | `metadata` |
 
 ## Engine selection
 
@@ -134,3 +135,15 @@ power `insider-force-ceramic` (short, 9:16) and `worldofai-signal`
 3. The registry discovers tools automatically - no manual registration needed.
 4. Attach relevant Layer 2 skills via `agent_skills[]`.
 5. **No other files need updating.**
+
+## Adding New Skills
+
+1. Place the skill in the right Layer 2 folder: `core/`, `creative/`, `meta/`,
+   or `pipelines/<pipeline>/`. One flat `.md` file per skill is the convention.
+2. Write a short trigger-based description in the first lines so the index and
+   `agent_skills[]` references make discovery obvious.
+3. Put deterministic helpers under `scripts/` next to the skill folder
+   (e.g. `skills/core/scripts/make_thumbnail.py`).
+4. Add a row to the matching table above and wire it into the consuming
+   stage-director and tool's `agent_skills[]` where relevant.
+5. Keep the skill under ~100 lines; split long detail into a reference file.
