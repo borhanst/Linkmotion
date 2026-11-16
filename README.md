@@ -260,7 +260,7 @@ Then open the generated project and proceed stage by stage.
 
 ## License
 
-AGPL-3.0 — see [LICENSE](LICENSE) for the full text.
+MIT — see [LICENSE](LICENSE) for the full text.
 
 ## Contributing
 
